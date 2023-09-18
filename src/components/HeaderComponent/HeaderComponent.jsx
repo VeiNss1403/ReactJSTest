@@ -1,9 +1,59 @@
 import React from "react"
+import { Badge, Col } from 'antd';
+import { WrapperAccountHeader, WrapperHeader, WrapperTextHeader, WrapperTextHeaderLogo } from "./style";
+import {
+    UserOutlined,
+    CaretDownOutlined,
+    ShoppingCartOutlined
+} from '@ant-design/icons';
+import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
+
+
+
 
 const HeaderComponent = () => {
     return (
         <div>
-            HeaderComponent
+            <WrapperHeader>
+                <Col span={6}>
+                    <WrapperTextHeaderLogo>anh IT may mắn</WrapperTextHeaderLogo>
+                </Col>
+                <Col span={12}>
+                    <ButtonInputSearch
+                        size="large"
+                        textButton="Tìm kiếm"
+                        placeholder="Tìm kiếm"
+                        bordered="false"
+                        backgroundColorInput="#fff"
+                        backgroundColorButton="#f97d61"
+                    //onSearch={onSearch}
+                    />
+                </Col>
+                <Col span={6} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                    <WrapperAccountHeader>
+                        <UserOutlined style={{ fontSize: '30px' }} />
+                        <div>
+                            <WrapperTextHeader>
+                                Đăng nhập/Đăng ký
+                            </WrapperTextHeader>
+                            <div>
+                                <WrapperTextHeader>
+                                    Tài Khoản
+                                </WrapperTextHeader>
+                                <CaretDownOutlined />
+                            </div>
+                        </div>
+                    </WrapperAccountHeader>
+                    <div>
+                        <Badge count={4} size="small">
+                            <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                        </Badge>
+                        <WrapperTextHeader>
+                            Giỏ hàng
+                        </WrapperTextHeader>
+                    </div>
+                </Col>
+            </WrapperHeader>
         </div>
     )
 }

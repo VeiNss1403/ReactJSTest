@@ -7,19 +7,6 @@ import DefaultComponent from './components/DefaultComponent/DefaultComponent'
 function App() {
   return (
     <div className='App'>
-      <nav>
-        <ul>
-          <li>
-            <a href='/'>product</a>
-          </li>
-          <li>
-            <a href='/order'>product</a>
-          </li>
-          <li>
-            <a href='/products'>product</a>
-          </li>
-        </ul>
-      </nav>
       <Routes>
         {routes.map((route) => {
           const Page = route.page
