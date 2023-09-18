@@ -40,7 +40,7 @@ const HomePage = () => {
                         border: '1px solid rpg(11,116,229)',
                         color: 'rpg(11,116,229)',
                         width: '240px', height: '38px', borderRadius: '4px'
-                    }} />
+                    }} styleTextButton={{ fontWeight: 500}}/>
                 </div>
             </div>
 
