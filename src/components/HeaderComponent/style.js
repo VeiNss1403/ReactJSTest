@@ -7,6 +7,7 @@ export const WrapperHeader = styled(Row)`
     align-items: center;
     gap: 16px;
     flex-Wrap:nowrap;
+    width: 100%;
 `
 export const WrapperTextHeaderLogo = styled.span`
     font-size:18px;
