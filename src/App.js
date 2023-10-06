@@ -12,11 +12,9 @@ function App() {
   // }, [])
   const fetchApi = async () => {
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProduct`)
-    console.log("🚀 ~ file: App.js:16 ~ fetchApi ~ res:", res)
     return res.data
   }
   const query = useQuery({ queryKey: ['todos'], queryFn: fetchApi })
-  console.log("🚀 ~ file: App.js:17 ~ App ~ query:", query)
 
   return (
     <div className='App'>
