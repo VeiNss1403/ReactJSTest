@@ -27,10 +27,9 @@ const SignInPage = () => {
         if (isSuccess) { 
             message.success()
             navigate('/')
-            localStorage.setItem('access_token', data?.access_token)
+            localStorage.setItem('access_token', JSON.stringify(data?.access_token))
             if (data?.access_token) {
                 const decoded = jwtDecode(data?.access_token)
-                console.log("🚀 ~ file: SignInPage.jsx:30 ~ useEffect ~ decoded:", decoded)
                 if (decoded?.id) {
                     handleGetDetailsUser(decoded?.id, data?.access_token) 
                 }

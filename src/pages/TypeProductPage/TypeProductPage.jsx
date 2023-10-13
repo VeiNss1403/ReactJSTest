@@ -30,4 +30,4 @@ const TypeProductPage = () => {
 
     )
 }
-export default TypeProductPage
+export default TypeProductPage 

@@ -1,6 +1,6 @@
-import React from "react"
-import { Badge, Col } from 'antd';
-import { WrapperAccountHeader, WrapperHeader, WrapperTextHeader, WrapperTextHeaderLogo } from "./style";
+import React, { useState } from "react"
+import { Badge, Button, Col, Popover } from 'antd';
+import { WrapperAccountHeader, WrapperContentPopup, WrapperHeader, WrapperTextHeader, WrapperTextHeaderLogo } from "./style";
 import {
     UserOutlined,
     CaretDownOutlined,
@@ -8,16 +8,30 @@ import {
 } from '@ant-design/icons';
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-
-
+import { useDispatch, useSelector } from "react-redux";
+import * as UserService from "../../services/UserService";
+import { resetUser } from "../../redux/slices/userSlide";
+import Loading from "../LoadingComponent/LoadingComponent";
 const HeaderComponent = () => {
     const navigate = useNavigate()
     const user = useSelector((state) => state.user)
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false)
     const handleNavigateLogin = () => {
         navigate('/sign-in')
     };
-    console.log("🚀 ~ file: HeaderComponent.jsx:19 ~ HeaderComponent ~ user:",user)
+    const handleLogOut = async () => {
+        setLoading(true);
+        await UserService.LogoutUser()
+        dispatch(resetUser())
+        setLoading(false);
+    }
+    const content = (
+        <div>
+            <WrapperContentPopup onClick={() => navigate('/profile-user')}>Thông tin người dùng</WrapperContentPopup>
+            <WrapperContentPopup onClick={handleLogOut}>Đăng xuất</WrapperContentPopup>
+        </div>
+    );
     return (
         <div style={{ width: '100%', background: 'rbg(26, 148, 255)', display: 'flex', justifyContent: 'center' }}>
             <WrapperHeader>
@@ -36,24 +50,30 @@ const HeaderComponent = () => {
                     />
                 </Col>
                 <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
-                    <WrapperAccountHeader>
-                        <UserOutlined style={{ fontSize: '30px' }} />
-                        {user?.name ? (
-                            <div>{user.name}</div>
-                        ) : (
-                            <div onClick={handleNavigateLogin} style={{ cursor: 'pointer' }}>
-                                <WrapperTextHeader>
-                                    Đăng nhập/Đăng ký
-                                </WrapperTextHeader>
-                                <div>
+                    <Loading isLoading={loading}>
+                        <WrapperAccountHeader>
+                            <UserOutlined style={{ fontSize: '30px' }} />
+                            {user?.name ? (
+                                <>
+                                    <Popover content={content} trigger="click">
+                                        <div style={{ cursor: 'pointer' }}>{user.name}</div>
+                                    </Popover>
+                                </>
+                            ) : (
+                                <div onClick={handleNavigateLogin} style={{ cursor: 'pointer' }}>
                                     <WrapperTextHeader>
-                                        Tài Khoản
+                                        Đăng nhập/Đăng ký
                                     </WrapperTextHeader>
-                                    <CaretDownOutlined />
+                                    <div>
+                                        <WrapperTextHeader>
+                                            Tài Khoản
+                                        </WrapperTextHeader>
+                                        <CaretDownOutlined />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </WrapperAccountHeader>
+                            )}
+                        </WrapperAccountHeader>
+                    </Loading>
                     <div>
                         <Badge count={4} size="small">
                             <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
