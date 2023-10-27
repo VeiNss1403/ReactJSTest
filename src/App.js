@@ -1,21 +1,26 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { routes } from './routes'
 import DefaultComponent from './components/DefaultComponent/DefaultComponent'
 import { isJasonString } from './ultils'
 import jwtDecode from 'jwt-decode'
 import * as UserService from './services/UserService'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from './redux/slices/userSlide'
+import Loading from './components/LoadingComponent/LoadingComponent'
 
 function App() {
   const dispatch = useDispatch();
+  const [isloading, setIsloading] = useState(false)
+  const user = useSelector((state) => state.user)
   useEffect(() => {
+    setIsloading(true)
     const { storageData, decoded } = handleDecoded()
     if (decoded?.id) {
       handleGetDetailsUser(decoded?.id, storageData)
     }
-  }, [])
+    setIsloading(false)
+  },[])
 
   const handleDecoded = () => {
     let storageData = localStorage.getItem('access_token')
@@ -35,7 +40,7 @@ function App() {
       config.headers['token'] = `Bearer ${data?.access_token}`
     }
     return config;
-  },  (error) => {
+  }, (error) => {
     // Do something with request error
     return Promise.reject(error);
   });
@@ -45,20 +50,24 @@ function App() {
     dispatch(updateUser({ ...res?.data, access_token: token }))
   }
   return (
-    <div className='App'>
-      <Routes>
-        {routes.map((route) => {
-          const Page = route.page
-          const Layout = route.isShowHeader ? DefaultComponent : Fragment
-          return (
-            <Route path={route.path} element={
-              <Layout>
-                <Page />
-              </Layout>
-            } />
-          )
-        })}
-      </Routes>
+    <div>
+      <Loading isLoading={isloading}>
+        <Routes>
+          {routes.map((route) => {
+            const Page = route.page
+            const ischeckAuth = !route.isPrivate || user.isAdmin
+            const Layout = route.isShowHeader ? DefaultComponent : Fragment
+            return (
+              <Route key={route.path} path={ route.path} element={
+                <Layout>
+                  <Page />
+                </Layout>
+              } />
+            )
+          })}
+        </Routes>
+      </Loading>
+
     </div>
   )
 }
