@@ -6,7 +6,6 @@ import slider1 from "../../Assets/Images/slider1.jpg";
 import slider2 from "../../Assets/Images/slider2.jpg";
 import slider3 from "../../Assets/Images/slider3.jpg";
 import CardComponent from "../../components/CardComponent/CardComponent";
-//import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 const HomePage = () => {
     const arr = ['TV', 'Tu Lanh', 'Lap Top']
     return (
