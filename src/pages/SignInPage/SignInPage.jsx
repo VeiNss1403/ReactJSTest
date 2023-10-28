@@ -97,7 +97,7 @@ const SignInPage = () => {
                                 width: '100%',
                                 border: 'none',
                                 borderRadius: '4px',
-                                margin: '16px 0 10px',
+                                margin: '26px 0 10px',
                             }}
                             textButton={'Đăng nhập'}
                             styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
