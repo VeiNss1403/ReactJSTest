@@ -8,30 +8,34 @@ const ButtonInputSearch = (props) => {
     const {
         size,
         placeholder,
+        textbutton,
         bordered,
-        textButton,
-        backgroundColorInput,
-        backgroundColorButton,
+        backgroundColorInput = '#fff',
+        backgroundColorButton = 'rgb(13, 92, 182)',
         colorButton = '#fff'
     } = props
+
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', }}>
             <InputComponent
                 size={size}
                 placeholder={placeholder}
                 bordered={bordered}
-                style={{ display: 'flex', backgroundColor: backgroundColorInput }}
+                style={{ backgroundColor: backgroundColorInput }}
+                {...props}
             />
-
             <ButtonComponent
                 size={size}
-                styleButton={{ display: 'flex', border: 'none', color: '#fff', backgroundColor: backgroundColorButton }}
-                icon={<SearchOutlined color={colorButton} style={{ fontSize: '30px', color: '#fff' }} />}
-                textButton={textButton}
+                styleButton={{
+                    background: backgroundColorButton,
+                    border: !bordered && 'none'
+                }}
+                icon={<SearchOutlined color={colorButton} style={{ color: '#fff' }} />}
+                textButton={textbutton}
                 styleTextButton={{ color: colorButton }}
             />
         </div>
-    );
+    )
 };
 
 export default ButtonInputSearch;

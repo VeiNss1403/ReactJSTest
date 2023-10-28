@@ -12,12 +12,14 @@ import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { resetUser } from "../../redux/slices/userSlide";
 import Loading from "../LoadingComponent/LoadingComponent";
-const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
+import { searchProduct } from "../../redux/slices/ProductSlide";
+const HeaderComponent = ({isHiddenSearch = false, isHiddenCart = false}) => {
     const navigate = useNavigate()
     const user = useSelector((state) => state.user)
     const dispatch = useDispatch()
     const [userName, setUserName] = useState()
     const [userAvatar, setUserAvatar] = useState()
+    const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(false)
     const handleNavigateLogin = () => {
         navigate('/sign-in')
@@ -43,6 +45,10 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
             <WrapperContentPopup onClick={handleLogOut}>Đăng xuất</WrapperContentPopup>
         </div>
     );
+    const onSearch = (e) => {
+        setSearch(e.target.value);
+        dispatch(searchProduct(e.target.value));
+    }
     return (
         <div style={{ width: '100%', background: 'rbg(26, 148, 255)', display: 'flex', justifyContent: 'center' }}>
             <WrapperHeader style={{ justifyContent: isHiddenCart && isHiddenSearch ? 'space-between' : 'unset' }}>
@@ -53,12 +59,10 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                     <Col span={13}>
                         <ButtonInputSearch
                             size="large"
-                            textButton="Tìm kiếm"
-                            placeholder="Tìm kiếm"
-                            bordered="false"
-                            backgroundColorInput="#fff"
-                            backgroundColorButton="#f97d61"
-                        //onSearch={onSearch}
+                            bordered={false}
+                            textbutton='Search'
+                            placeholder="input search text"
+                            onChange={onSearch}
                         />
                     </Col>
                 )}

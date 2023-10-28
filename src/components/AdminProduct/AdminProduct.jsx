@@ -97,6 +97,19 @@ const AdminProduct = () => {
             return res
         }
     )
+    const mutationDeletedMany = useMutationHooks(
+        (data) => {
+            const {
+                token,
+                ...ids
+            } = data
+            const res = ProductService.deleteManyProduct(
+                ids,
+                token,
+            )
+            return res
+        }
+    )
     const getAllProducts = async () => {
         const res = await ProductService.getAllProducts()
         return res
@@ -104,6 +117,7 @@ const AdminProduct = () => {
     const { data, isLoading, isSuccess, isError } = mutation
     const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
     const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted, isError: isErrorDeleted } = mutationDeleted
+    const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDeletedMany, isError: isErrorDeletedMany } = mutationDeletedMany
     const queryProduct = useQuery({ queryKey: ['products'], queryFn: getAllProducts })
     const { isLoading: isLoadingProduct, data: products } = queryProduct
     const renderAction = () => {
@@ -135,15 +149,15 @@ const AdminProduct = () => {
     }, [form, stateProductDetail])
 
     useEffect(() => {
-        if (rowSelected) {
+        if (rowSelected && isOpenDrawer) {
             setIsLoadingUpdate(true)
             fetchGetDetailsProduct(rowSelected)
         }
-    }, [rowSelected])
+    }, [rowSelected, isOpenDrawer])
+
     const handleDetailsProduct = () => {
         setIsOpenDrawer(true)
     }
-
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         // setSearchText(selectedKeys[0]);
@@ -316,6 +330,14 @@ const AdminProduct = () => {
             messages.error()
         }
     }, [isSuccessUpdated])
+
+    useEffect(() => {
+        if (isSuccessDeletedMany && dataDeletedMany?.status === 'OK') {
+            messages.success()
+        } else if (isErrorDeletedMany) {
+            messages.error()
+        }
+    }, [isSuccessDeletedMany])
     const handleCloseDrawer = () => {
         setIsOpenDrawer(false);
         setStateProductDetail({
@@ -398,6 +420,13 @@ const AdminProduct = () => {
             }
         })
     }
+    const handleDeleteManyProducts = (ids) => {
+        mutationDeletedMany.mutate({ ids: ids, token: user?.access_token }, {
+            onSettled: () => {
+                queryProduct.refetch()
+            }
+        })
+    }
     return (
         <div>
             <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
@@ -405,7 +434,7 @@ const AdminProduct = () => {
                 <Button style={{ height: 150, width: 150, borderRadius: 6, borderStyle: "dashed" }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: 60 }} /></Button>
             </div>
             <div style={{ margin: 20 }}>
-                <TableComponent columns={columns} isLoading={isLoadingProduct} data={dataTable} onRow={(record) => {
+                <TableComponent filename='Products' handleDeleteMany={handleDeleteManyProducts} columns={columns} isLoading={isLoadingProduct} data={dataTable} onRow={(record) => {
                     return {
                         onClick: event => {
                             setRowSelected(record._id);
