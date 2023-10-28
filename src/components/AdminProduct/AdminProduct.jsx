@@ -71,8 +71,6 @@ const AdminProduct = () => {
     )
     const mutationUpdate = useMutationHooks(
         (data) => {
-            console.log("🚀 ~ file: AdminProduct.jsx:68 ~ AdminProduct ~ data:", data)
-
             const {
                 id,
                 token,
