@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from "./style";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
@@ -15,22 +15,30 @@ const HomePage = () => {
     const searchProduct = useSelector((state) => state?.product?.search)
     const [loading, setLoading] = useState(false)
     const [limit, setLimit] = useState(6)
-    const searchDebounce = useDebounce(searchProduct, 1000)
-    const arr = ['TV', 'Tu Lanh', 'Lap Top']
-    const fetchProductAll = async (context) => {
+    const [typeProduct, setTypeProduct] = useState([])
+    const searchDebounce = useDebounce(searchProduct, 500)
+    const fetchAllProduct = async (context) => {
         const limit = context?.queryKey && context?.queryKey[1]
         const search = context?.queryKey && context?.queryKey[2]
         const res = await ProductService.getAllProducts(search, limit)
         return res
     }
-
-    const { isLoading, data: products, isPreviousData } = useQuery(['products', limit, searchDebounce], fetchProductAll, { retry: 3, retryDelay: 1000, keepPreviousData: true })
+    const fetchAllTypeProduct = async () => {
+        const res = await ProductService.getAllTypeProduct()
+        if (res?.status === 'OK') {
+            setTypeProduct(res?.data)
+        }  
+    }
+    const { isLoading, data: products, isPreviousData } = useQuery(['products', limit, searchDebounce], fetchAllProduct, { retry: 3, retryDelay: 1000, keepPreviousData: true })
+    useEffect(() => {
+        fetchAllTypeProduct()
+    },[])
     return (
         <Loading isLoading={isLoading || loading}>
             < div style={{ width: 'auto', margin: '0 120px' }}>
                 <WrapperTypeProduct>
                     {
-                        arr.map((item) => {
+                        typeProduct?.map((item) => {
                             return (
                                 <TypeProduct name={item} key={item} />
                             )

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const WrapperHeader = styled(Row)`
     padding: 10px 120px;
-    background-color:#ea5a39;
+    background-color:#fff;
     align-items: center;
     gap: 16px;
     flex-Wrap:nowrap;
@@ -18,12 +18,13 @@ export const WrapperTextHeaderLogo = styled.span`
 export const WrapperAccountHeader = styled.div`
     display: flex;
     align-items: center;
-    color:#fff;
+    color:#333333;
     gap:10px;
+    font-weight:bold
 `
 export const WrapperTextHeader = styled.span`
     font-size:12px;
-    color: #fff;
+    color: #333333;
     white-space: nowrap;
 `
 

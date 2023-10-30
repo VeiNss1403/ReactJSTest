@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Badge, Col, Popover } from 'antd';
+import { Badge, Col, Image, Popover } from 'antd';
 import { WrapperAccountHeader, WrapperContentPopup, WrapperHeader, WrapperTextHeader, WrapperTextHeaderLogo } from "./style";
 import {
     UserOutlined,
@@ -13,6 +13,7 @@ import * as UserService from "../../services/UserService";
 import { resetUser } from "../../redux/slices/userSlide";
 import Loading from "../LoadingComponent/LoadingComponent";
 import { searchProduct } from "../../redux/slices/ProductSlide";
+import imageLogo from "../../Assets/Images/logo/logoVivita.png"
 const HeaderComponent = ({isHiddenSearch = false, isHiddenCart = false}) => {
     const navigate = useNavigate()
     const user = useSelector((state) => state.user)
@@ -21,6 +22,7 @@ const HeaderComponent = ({isHiddenSearch = false, isHiddenCart = false}) => {
     const [userAvatar, setUserAvatar] = useState()
     const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(false)
+    const order = useSelector((state) => state.order)
     const handleNavigateLogin = () => {
         navigate('/sign-in')
     };
@@ -51,17 +53,16 @@ const HeaderComponent = ({isHiddenSearch = false, isHiddenCart = false}) => {
     }
     return (
         <div style={{ width: '100%', background: 'rbg(26, 148, 255)', display: 'flex', justifyContent: 'center' }}>
-            <WrapperHeader style={{ justifyContent: isHiddenCart && isHiddenSearch ? 'space-between' : 'unset' }}>
+            <WrapperHeader style={{ justifyContent: isHiddenCart && isHiddenSearch ? 'between' : 'unset' }}>
                 <Col span={5}>
-                    <WrapperTextHeaderLogo>IT</WrapperTextHeaderLogo>
+                    <Image src={imageLogo} preview={false}/>
                 </Col>
                 {!isHiddenSearch && (
                     <Col span={13}>
                         <ButtonInputSearch
                             size="large"
-                            bordered={false}
-                            textbutton='Search'
-                            placeholder="input search text"
+                            textbutton='Tìm kiếm'
+                            placeholder="Tìm kiếm sản phẩm..."
                             onChange={onSearch}
                         />
                     </Col>
@@ -101,9 +102,9 @@ const HeaderComponent = ({isHiddenSearch = false, isHiddenCart = false}) => {
                         </WrapperAccountHeader>
                     </Loading>
                     {!isHiddenCart && (
-                        <div>
-                            <Badge count={4} size="small">
-                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                        <div onClick={()=> navigate('/order')} style={{cursor:'pointer'}}>
+                            <Badge count={order?.orderItems?.length} size="small">
+                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#000' }} />
                             </Badge>
                             <WrapperTextHeader>
                                 Giỏ hàng

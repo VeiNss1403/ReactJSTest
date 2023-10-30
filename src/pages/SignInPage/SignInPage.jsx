@@ -8,7 +8,7 @@ import {
     EyeFilled,
     EyeInvisibleFilled,
 } from '@ant-design/icons';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
@@ -19,14 +19,20 @@ import { updateUser } from "../../redux/slices/userSlide";
 const SignInPage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const location = useLocation()
+    console.log("🚀 ~ file: SignInPage.jsx:23 ~ SignInPage ~ location:", location)
     const mutation = useMutationHooks(
         data => UserService.loginUser(data)
     )
     const { data, isLoading, isSuccess } = mutation
     useEffect(() => { 
         if (isSuccess) { 
+            if (location?.state) {
+                navigate(location?.state)
+            } else {
+                navigate('/')
+            }
             message.success()
-            navigate('/')
             localStorage.setItem('access_token', JSON.stringify(data?.access_token))
             if (data?.access_token) {
                 const decoded = jwtDecode(data?.access_token)
