@@ -14,6 +14,7 @@ import Loading from "../LoadingComponent/LoadingComponent";
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slices/orderSlide";
+import { convertPrice } from "../../ultils";
 const ProductDetailComponent = ({ idProduct }) => {
     const user = useSelector((state) => state.user)
     const [numProduct, setNumProduct] = useState(1)
@@ -32,6 +33,8 @@ const ProductDetailComponent = ({ idProduct }) => {
         }
     }
     const { isLoading, data: productDetails } = useQuery(['product-details', idProduct], fetchGetDetailsProduct, { enabled: !!idProduct })
+    console.log("🚀 ~ file: ProductDetailComponent.jsx:36 ~ ProductDetailComponent ~ productDetails:", productDetails)
+    
     const handleChangeCount = (type) => {
         if (type === 'increase') {
             setNumProduct(numProduct + 1)
@@ -49,7 +52,8 @@ const ProductDetailComponent = ({ idProduct }) => {
                     amount: numProduct,
                     image: productDetails?.image,
                     price: productDetails?.price,
-                    product: productDetails?._id
+                    product: productDetails?._id,
+                    discount: productDetails?.discount
                 }
             }))
         }
@@ -87,7 +91,7 @@ const ProductDetailComponent = ({ idProduct }) => {
                         <WrapperStyleTextSell> | Đã bán 1000+</WrapperStyleTextSell>
                     </div>
                     <WrapperPriceProduct>
-                        <WrapperPriceTextProduct>{productDetails?.price} đ</WrapperPriceTextProduct>
+                        <WrapperPriceTextProduct>{convertPrice(productDetails?.price)} đ</WrapperPriceTextProduct>
                     </WrapperPriceProduct>
                     <WrapperAddressProduct>
                         <span>Giao đến </span>

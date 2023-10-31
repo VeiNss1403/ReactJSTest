@@ -24,7 +24,7 @@ export function getItem(label, key, icon, children, type) {
 }
 export const renderOptions = (arr) => {
     let results = []
-    if(arr) {
+    if (arr) {
         results = arr?.map((opt) => {
             return {
                 value: opt,
@@ -37,4 +37,12 @@ export const renderOptions = (arr) => {
         value: 'add_type'
     })
     return results
+}
+export const convertPrice = (price) => {
+    try {
+        const result = price?.toLocaleString().replaceAll(',','.')
+        return `${result} VND`
+    } catch (error) {
+        return null;
+    }
 }

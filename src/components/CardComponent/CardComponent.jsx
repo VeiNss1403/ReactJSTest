@@ -4,6 +4,7 @@ import {
     StarFilled
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { convertPrice } from "../../ultils";
 const CardComponent = (props) => {
     const navigate = useNavigate()
     const { countInStock, description, image, name, price, rating, type, selled, discount, id } = props
@@ -28,7 +29,7 @@ const CardComponent = (props) => {
             </WrapperReportText>
             <WrapperPriceText>
                 <span style={{ marginRight: '8px' }}>
-                    {price?.toLocaleString()} đ
+                    {convertPrice(price)}
                 </span>
                 <WrapperPriceDiscountText>
                     - {discount || 5}%
