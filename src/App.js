@@ -1,74 +1,86 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import { routes } from './routes'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import DefaultComponent from './components/DefaultComponent/DefaultComponent'
-import { isJasonString } from './ultils'
-import jwtDecode from 'jwt-decode'
+import { routes } from './routes'
+import { isJsonString } from './utils'
+import jwt_decode from "jwt-decode";
 import * as UserService from './services/UserService'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUser } from './redux/slices/userSlide'
-import Loading from './components/LoadingComponent/LoadingComponent'
+import { resetUser, updateUser } from './redux/slides/userSlide'
+import Loading from './components/LoadingComponent/Loading'
 
 function App() {
   const dispatch = useDispatch();
-  const [isloading, setIsloading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const user = useSelector((state) => state.user)
+
   useEffect(() => {
-    setIsloading(true)
+    setIsLoading(true)
     const { storageData, decoded } = handleDecoded()
     if (decoded?.id) {
       handleGetDetailsUser(decoded?.id, storageData)
     }
-    setIsloading(false)
-  },[])
+    setIsLoading(false)
+  }, [])
 
   const handleDecoded = () => {
-    let storageData = localStorage.getItem('access_token')
+    let storageData = user?.access_token || localStorage.getItem('access_token')
     let decoded = {}
-    if (storageData && isJasonString(storageData)) {
+    if (storageData && isJsonString(storageData) && !user?.access_token) {
       storageData = JSON.parse(storageData)
-      decoded = jwtDecode(storageData)
+      decoded = jwt_decode(storageData)
     }
     return { decoded, storageData }
   }
 
   UserService.axiosJWT.interceptors.request.use(async (config) => {
+    // Do something before request is sent
     const currentTime = new Date()
     const { decoded } = handleDecoded()
+    let storageRefreshToken = localStorage.getItem('refresh_token')
+    const refreshToken = JSON.parse(storageRefreshToken)
+    const decodedRefreshToken =  jwt_decode(refreshToken)
     if (decoded?.exp < currentTime.getTime() / 1000) {
-      const data = await UserService.refreshToken()
-      config.headers['token'] = `Bearer ${data?.access_token}`
+      if(decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+        const data = await UserService.refreshToken(refreshToken)
+        config.headers['token'] = `Bearer ${data?.access_token}`
+      }else {
+        dispatch(resetUser())
+      }
     }
     return config;
-  }, (error) => {
-    // Do something with request error
-    return Promise.reject(error);
-  });
+  }, (err) => {
+    return Promise.reject(err)
+  })
 
   const handleGetDetailsUser = async (id, token) => {
-    const res = await UserService.getDetailUser(id, token)
-    dispatch(updateUser({ ...res?.data, access_token: token }))
+    let storageRefreshToken = localStorage.getItem('refresh_token')
+    const refreshToken = JSON.parse(storageRefreshToken)
+    const res = await UserService.getDetailsUser(id, token)
+    dispatch(updateUser({ ...res?.data, access_token: token, refreshToken: refreshToken}))
   }
-  return (
-    <div>
-      <Loading isLoading={isloading}>
-        <Routes>
-          {routes.map((route) => {
-            const Page = route.page
-            const ischeckAuth = !route.isPrivate || user.isAdmin
-            const Layout = route.isShowHeader ? DefaultComponent : Fragment
-            return (
-              <Route key={route.path} path={ route.path} element={
-                <Layout>
-                  <Page />
-                </Layout>
-              } />
-            )
-          })}
-        </Routes>
-      </Loading>
 
+  return (
+    <div style={{height: '100vh', width: '100%'}}>
+      <Loading isLoading={isLoading}>
+        <Router>
+          <Routes>
+            {routes.map((route) => {
+              const Page = route.page
+              const Layout = route.isShowHeader ? DefaultComponent : Fragment
+              return (
+                <Route key={route.path} path={route.path} element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                } />
+              )
+            })}
+          </Routes>
+        </Router>
+      </Loading>
     </div>
   )
 }
+
 export default App

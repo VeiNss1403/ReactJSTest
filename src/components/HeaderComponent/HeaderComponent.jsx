@@ -53,9 +53,9 @@ const HeaderComponent = ({isHiddenSearch = false, isHiddenCart = false}) => {
     }
     return (
         <div style={{ width: '100%', background: 'rbg(26, 148, 255)', display: 'flex', justifyContent: 'center' }}>
-            <WrapperHeader style={{ justifyContent: isHiddenCart && isHiddenSearch ? 'between' : 'unset' }}>
+            <WrapperHeader style={{ justifyContent: isHiddenCart && isHiddenSearch ? 'space-between' : 'unset' }}>
                 <Col span={5}>
-                    <Image src={imageLogo} preview={false}/>
+                    <Image src={imageLogo} preview={false} style={{cursor:'pointer'}} onClick={()=> navigate('/')}/>
                 </Col>
                 {!isHiddenSearch && (
                     <Col span={13}>

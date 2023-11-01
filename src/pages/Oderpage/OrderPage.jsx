@@ -18,6 +18,7 @@ import * as messages from "../../components/Message/Message";
 import Loading from '../../components/LoadingComponent/LoadingComponent';
 import { useMutationHooks } from '../../hooks/useMutationHook';
 import { updateUser } from '../../redux/slices/userSlide';
+import { useNavigate } from 'react-router-dom';
 const OrderPage = () => {
   const order = useSelector((state) => state.order)
   const user = useSelector((state) => state.user)
@@ -29,9 +30,9 @@ const OrderPage = () => {
     address: '',
     city: '',
   })
-  console.log("🚀 ~ file: OrderPage.jsx:31 ~ OrderPage ~ stateUserDetail:", stateUserDetail)
   const [form] = Form.useForm();
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const handleOnChangeDetail = (e) => {
     setStateUserDetail({
       ...stateUserDetail,
@@ -122,6 +123,8 @@ const OrderPage = () => {
       messages.error('Select order item')
     } else if (!user?.phone || !user?.address || !user?.name || !user?.city) {
       setIsOpenModalUpdateInfo(true)
+    } else {
+      navigate('/payment')
     }
   }
   const handleCancelUpdate = () => {
@@ -152,7 +155,6 @@ const OrderPage = () => {
     }
   )
   const { isLoading, data } = mutationUpdate
-  console.log("🚀 ~ file: OrderPage.jsx:132 ~ OrderPage ~ data:", data)
   const handleUpdateInfoUser = () => {
     const { name, phone, address, city } = stateUserDetail
     if (name && phone && address && city) {
@@ -164,6 +166,9 @@ const OrderPage = () => {
         }
       });
     }
+  }
+  const handleChangeAddress = () => { 
+    setIsOpenModalUpdateInfo(true)
   }
   return (
     <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
@@ -223,8 +228,8 @@ const OrderPage = () => {
               <WrapperInfo>
                 <div>
                   <span>Địa chỉ: </span>
-                  <span style={{ fontWeight: 'bold' }}> </span>
-                  <span style={{ color: '#9255FD', cursor: 'pointer' }}>Thay đổi</span>
+                  <span style={{ fontWeight: 'bold' }}> { `${user?.address}, ${user?.city}`}</span>
+                  <span onClick={handleChangeAddress} style={{ color: '#9255FD', cursor: 'pointer' }}> Thay đổi</span>
                 </div>
               </WrapperInfo>
               <WrapperInfo>
@@ -331,4 +336,4 @@ const OrderPage = () => {
   )
 }
 
-export default OrderPage
+export default OrderPage 

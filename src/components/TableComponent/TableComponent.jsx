@@ -1,71 +1,68 @@
-import { Table } from "antd";
-import React, { useRef, useState } from "react";
-import Loading from "../LoadingComponent/LoadingComponent";
-import { DownloadTableExcel } from "react-export-table-to-excel";
-import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import { Table } from 'antd';
+import React, { useState } from 'react'
+import Loading from '../../components/LoadingComponent/Loading'
+import { Excel } from "antd-table-saveas-excel";
+import { useMemo } from 'react';
+
 const TableComponent = (props) => {
-    const tableRef = useRef(null);
-    const { selectionType = 'checkbox', data = [], isLoading = false, columns = [], handleDeleteMany, filename='Export excel' } = props
-    const [rowSelectedKeys, setRowSelectedKeys] = useState([])
-    const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            setRowSelectedKeys(selectedRowKeys)
-        },
-        // getCheckboxProps: (record) => ({
-        //     disabled: record.name === 'Disabled User',
-        //     // Column configuration not to be checked
-        //     name: record.name,
-        // }),
-    };
-    const handleDeleteAll = () => {
-        handleDeleteMany(rowSelectedKeys)
-    }
-    return (
-        <Loading isLoading={isLoading}>
-            <DownloadTableExcel
-                filename={filename}
-                sheet="users"
-                currentTableRef={tableRef.current}
-            >
-
-                <ButtonComponent
-                    size={40}
-                    styleButton={{
-                        background: 'green',
-                        height: '48px',
-                        width: '220px',
-                        border: 'none',
-                        borderRadius: '4px',
-                    }}
-                    textButton={'Export excel'}
-                    styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
-                ></ButtonComponent>
-
-            </DownloadTableExcel>
-            {rowSelectedKeys.length > 0 && (
-                <div style={{
-                    background: 'blue',
-                    color: '#fff',
-                    fontWeight: 'bold',
-                    padding: 10,
-                    cursor: 'pointer',
-                }}
-                    onClick={handleDeleteAll}>
-                    Xóa tất cả
-                </div>
-            )}
-            <Table
-                ref={tableRef}
-                rowSelection={{
-                    type: selectionType,
-                    ...rowSelection,
-                }}
-                columns={columns}
-                dataSource={data}
-                {...props}
-            />
-        </Loading>
-
-    )
+  const { selectionType = 'checkbox', data:dataSource = [], isLoading = false, columns = [], handleDelteMany } = props
+  const [rowSelectedKeys, setRowSelectedKeys] = useState([])
+  const newColumnExport = useMemo(() => {
+    const arr = columns?.filter((col) => col.dataIndex !== 'action')
+    return arr
+  }, [columns])
+  
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setRowSelectedKeys(selectedRowKeys)
+    },
+    // getCheckboxProps: (record) => ({
+    //   disabled: record.name === 'Disabled User',
+    //   // Column configuration not to be checked
+    //   name: record.name,
+    // }),
+  };
+  const handleDeleteAll = () => {
+    handleDelteMany(rowSelectedKeys)
+  }
+  const exportExcel = () => {
+    const excel = new Excel();
+    excel
+      .addSheet("test")
+      .addColumns(newColumnExport)
+      .addDataSource(dataSource, {
+        str2Percent: true
+      })
+      .saveAs("Excel.xlsx");
+  };
+  
+  return (
+    <Loading isLoading={isLoading}>
+      {!!rowSelectedKeys.length && (
+        <div style={{
+          background: '#1d1ddd',
+          color: '#fff',
+          fontWeight: 'bold',
+          padding: '10px',
+          cursor: 'pointer'
+        }}
+          onClick={handleDeleteAll}
+        >
+          Xóa tất cả
+        </div>
+      )}
+      <button onClick={exportExcel}>Export Excel</button>
+      <Table
+        rowSelection={{
+          type: selectionType,
+          ...rowSelection,
+        }}
+        columns={columns}
+        dataSource={dataSource}
+        {...props}
+      />
+    </Loading>
+  )
 }
+
 export default TableComponent
