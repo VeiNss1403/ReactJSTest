@@ -1,43 +1,45 @@
 import { Table } from 'antd';
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Loading from '../../components/LoadingComponent/Loading'
-import { Excel } from "antd-table-saveas-excel";
 import { useMemo } from 'react';
-
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import ButtonComponent from '../ButtonComponent/ButtonComponent';
 const TableComponent = (props) => {
-  const { selectionType = 'checkbox', data:dataSource = [], isLoading = false, columns = [], handleDelteMany } = props
+  const { selectionType = 'checkbox', data: dataSource = [], isLoading = false, columns, filename = [], handleDelteMany } = props
   const [rowSelectedKeys, setRowSelectedKeys] = useState([])
   const newColumnExport = useMemo(() => {
     const arr = columns?.filter((col) => col.dataIndex !== 'action')
     return arr
   }, [columns])
-  
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setRowSelectedKeys(selectedRowKeys)
     },
-    // getCheckboxProps: (record) => ({
-    //   disabled: record.name === 'Disabled User',
-    //   // Column configuration not to be checked
-    //   name: record.name,
-    // }),
   };
   const handleDeleteAll = () => {
     handleDelteMany(rowSelectedKeys)
   }
-  const exportExcel = () => {
-    const excel = new Excel();
-    excel
-      .addSheet("test")
-      .addColumns(newColumnExport)
-      .addDataSource(dataSource, {
-        str2Percent: true
-      })
-      .saveAs("Excel.xlsx");
-  };
-  
+  const tableRef = useRef(null);
+
   return (
     <Loading isLoading={isLoading}>
+      <DownloadTableExcel
+        filename={filename}
+        // sheet="users"
+        currentTableRef={tableRef.current}
+      >
+        <ButtonComponent
+          size={40}
+          styleButton={{
+            background: 'green',
+            height: '36px',
+            borderRadius: '4px'
+          }}
+          textbutton={'Xuất Excel'}
+          styleTextButton={{ color: '#fff', fontSize: '14px' }}
+        />
+      </DownloadTableExcel>
       {!!rowSelectedKeys.length && (
         <div style={{
           background: '#1d1ddd',
@@ -51,8 +53,9 @@ const TableComponent = (props) => {
           Xóa tất cả
         </div>
       )}
-      <button onClick={exportExcel}>Export Excel</button>
+      
       <Table
+        ref={tableRef}
         rowSelection={{
           type: selectionType,
           ...rowSelection,

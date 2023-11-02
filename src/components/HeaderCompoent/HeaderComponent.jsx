@@ -1,6 +1,6 @@
-import { Badge, Button, Col, Popover } from 'antd'
+import { Badge, Image, Col, Popover } from 'antd'
 import React from 'react'
-import { WrapperContentPopup, WrapperHeader, WrapperHeaderAccout, WrapperTextHeader, WrapperTextHeaderSmall } from './style'
+import { WrapperContentPopup, WrapperHeader, WrapperHeaderAccout, WrapperHearderMenu, WrapperTextHeader, WrapperTextHeaderSmall } from './style'
 import {
   UserOutlined,
   CaretDownOutlined,
@@ -15,7 +15,7 @@ import { useState } from 'react';
 import Loading from '../LoadingComponent/Loading';
 import { useEffect } from 'react';
 import { searchProduct } from '../../redux/slides/productSlide';
-
+import logoImage from '../../Assets/Images/logo/logoVivita.png';
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate()
@@ -80,20 +80,23 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   }
 
   return (
-    <div style={{  heiht: '100%', width: '100%', display: 'flex',background: '#9255FD', justifyContent: 'center' }}>
+    <div style={{  height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems:'center' }}>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>
-        <Col span={5}>
-          <WrapperTextHeader to='/'>SHOP</WrapperTextHeader>
+        <Col span={3}>
+        <Image src={logoImage} alt="Logo Image" preview={false} />
+        </Col>
+        <Col span={6} style={{display:'flex'}}>
+          <WrapperHearderMenu>Giới thiệu Vivita</WrapperHearderMenu> 
+          <WrapperHearderMenu>Tin mới Vivita</WrapperHearderMenu>
         </Col>
         {!isHiddenSearch && (
-          <Col span={13}>
+          <Col span={10}>
             <ButttonInputSearch
               size="large"
-              bordered={false}
               textbutton="Tìm kiếm"
-              placeholder="input search text"
+              placeholder="Tìm kiếm sản phẩm..."
               onChange={onSearch}
-              backgroundColorButton="#5a20c1"
+              backgroundColorButton="linear-gradient(180deg, #DF171F 30.21%, #A22A2F 100%)"
             />
           </Col>
         )}
@@ -130,7 +133,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           {!isHiddenCart && (
             <div onClick={() => navigate('/order')} style={{cursor: 'pointer'}}>
               <Badge count={order?.orderItems?.length} size="small">
-                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#000' }} />
               </Badge>
               <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
             </div>

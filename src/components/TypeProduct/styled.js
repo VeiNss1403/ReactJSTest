@@ -1,11 +1,14 @@
 import styled from "styled-components";
 
 export const WrapperType = styled.div`
-  padding: 10px 10px;
+  color: #fff;
+  padding: 15px;
   cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 24px;
+  font-family: Inter,sans-serif;
   &:hover {
-    background-color: var(--primary-color);
-    color: #fff;
-    border-radius: 4px;
+    color: #f6bb42;
   }
 `

@@ -1,6 +1,6 @@
 import React from 'react'
 import { WrapperAllPrice, WrapperContentInfo, WrapperHeaderUser, WrapperInfoUser, WrapperItem, WrapperItemLabel, WrapperLabel, WrapperNameProduct, WrapperProduct, WrapperStyleContent } from './style'
-import logo from '../../assets/images/logo.png'
+import logo from '../../Assets/Images/logo.png'
 import { useLocation, useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import * as OrderService from '../../services/OrderService'
