@@ -14,7 +14,7 @@ export const WrapperContainerRight = styled.div`
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 10px;
 `
 export const WrapperTextLight = styled.span`
     color: rgb(13, 92, 182);

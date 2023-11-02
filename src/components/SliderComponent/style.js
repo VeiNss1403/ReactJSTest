@@ -1,9 +1,8 @@
+import { Image } from "antd";
 import Slider from "react-slick";
 import styled from "styled-components";
 
 export const WrapperSliderStyle = styled(Slider)`
-    max-width: 867px;
-    max-height: 472px;
     & .slick-arrow.slick-prev {
         left: 12px;
         top: 50%;
@@ -24,7 +23,7 @@ export const WrapperSliderStyle = styled(Slider)`
     }
     & .slick-dots {
         z-index: 10;
-        bottom: -2px !important;
+        bottom: 40px !important;
         li {
             button {
                 &::before {
@@ -42,3 +41,11 @@ export const WrapperSliderStyle = styled(Slider)`
         }
     }
 `
+export const WrapperImageSlider = styled(Image)`
+    background-size: cover;
+`
+export const WrapperImageRight = styled(Image)`
+    background-size: cover;
+    margin-bottom: 8px !important;
+    cursor: pointer;
+` 

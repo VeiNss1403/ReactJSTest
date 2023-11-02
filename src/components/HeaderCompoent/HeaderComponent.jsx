@@ -83,7 +83,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     <div style={{  height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems:'center' }}>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>
         <Col span={3}>
-        <Image src={logoImage} alt="Logo Image" preview={false} />
+        <Image src={logoImage} style={{cursor:'pointer'}} alt="Logo Image" preview={false} onClick={() => navigate('/')}/>
         </Col>
         <Col span={6} style={{display:'flex'}}>
           <WrapperHearderMenu>Giới thiệu Vivita</WrapperHearderMenu> 

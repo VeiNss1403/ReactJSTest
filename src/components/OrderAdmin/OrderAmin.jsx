@@ -160,7 +160,7 @@ const OrderAdmin = () => {
         <PieChartComponent data={orders?.data} />
       </div>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent  columns={columns} isLoading={isLoadingOrders} data={dataTable} />
+        <TableComponent filename='Order' columns={columns} isLoading={isLoadingOrders} data={dataTable} />
       </div>
     </div>
   )

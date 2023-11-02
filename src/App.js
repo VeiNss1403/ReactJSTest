@@ -11,16 +11,21 @@ import Loading from './components/LoadingComponent/Loading'
 
 function App() {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const user = useSelector((state) => state.user)
 
   useEffect(() => {
-    setIsLoading(true)
-    const { storageData, decoded } = handleDecoded()
-    if (decoded?.id) {
-      handleGetDetailsUser(decoded?.id, storageData)
-    }
-    setIsLoading(false)
+    const initializeApp = async () => {
+      const { decoded, storageData } = handleDecoded();
+
+      if (decoded?.id) {
+        await handleGetDetailsUser(decoded.id, storageData);
+      }
+
+      setIsLoading(false); // Mark loading as complete
+    };
+
+    initializeApp();
   }, [])
 
   const handleDecoded = () => {
@@ -50,7 +55,7 @@ function App() {
     }
     return config;
   }, (err) => {
-    return Promise.reject(err)
+    return err
   })
 
   const handleGetDetailsUser = async (id, token) => {

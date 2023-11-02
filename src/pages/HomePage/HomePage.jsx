@@ -1,12 +1,15 @@
 import React from 'react'
 import SliderComponent from '../../components/SliderComponent/SliderComponent'
 import TypeProduct from '../../components/TypeProduct/TypeProduct'
-import { WrapperButtonMore, WrapperProducts, WrapperSliders, WrapperTypeProduct, WrapperTypeProductContent } from './style'
+import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct, WrapperTypeProductContent } from './style'
 import slider1 from '../../Assets/Images/SliderHomePage/banner-1.webp'
 import slider2 from '../../Assets/Images/SliderHomePage/banner-2.webp'
 import slider3 from '../../Assets/Images/SliderHomePage/banner-3.webp'
 import slider4 from '../../Assets/Images/SliderHomePage/banner-4.webp'
 import slider5 from '../../Assets/Images/SliderHomePage/banner-5.webp'
+import image1 from '../../Assets/Images/SliderHomePage/Heposal-600X336-1.webp'
+import image2 from '../../Assets/Images/SliderHomePage/tang-can-tamino.webp'
+import image3 from '../../Assets/Images/SliderHomePage/vivitaquangcao.webp'
 import CardComponent from '../../components/CardComponent/CardComponent'
 import { useQuery } from '@tanstack/react-query'
 import * as ProductService from '../../services/ProductService'
@@ -56,13 +59,9 @@ const HomePage = () => {
           })}
         </WrapperTypeProduct>
       </WrapperTypeProductContent>
-      <div style={{ width: '1270px', margin: '0 auto' }}>
-      </div>
       <div className='body' style={{ width: '100%', backgroundColor: '#efefef', }}>
+        <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} arrImageRight={[image1, image2, image3]} />
         <div id="container" style={{ height: '1000px', width: '1270px', margin: '0 auto' }}>
-          <WrapperSliders>
-            <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} />
-          </WrapperSliders>
           <WrapperProducts>
             {products?.data?.map((product) => {
               return (

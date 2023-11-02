@@ -2,7 +2,7 @@ import React from 'react'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 import InputForm from '../../components/InputForm/InputForm'
 import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
-import imageLogo from '../../Assets/Images/logo-login.png'
+import imageLogo from '../../Assets/Images/logo/logoVivita.png'
 import { Image } from 'antd'
 import { useState } from 'react'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
@@ -19,18 +19,15 @@ const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false)
   const [email, setEmail] = useState('');
+  console.log("🚀 ~ file: SignUpPage.jsx:22 ~ SignUpPage ~ email:", email)
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handleOnchangeEmail = (value) => {
-    setEmail(value)
-  }
-
+  
   const mutation = useMutationHooks(
     data => UserService.signupUser(data)
   )
 
-  const { data, isLoading, isSuccess, isError } = mutation
+  const { isSuccess, isError } = mutation
 
   useEffect(() => {
     if (isSuccess) {
@@ -41,13 +38,11 @@ const SignUpPage = () => {
     }
   }, [isSuccess, isError])
 
-  const handleOnchangePassword = (value) => {
-    setPassword(value)
-  }
-
-  const handleOnchangeConfirmPassword = (value) => {
-    setConfirmPassword(value)
-  }
+  const handleOnchangeInput = (field, value) => {
+    if (field === 'email') setEmail(value);
+    if (field === 'password') setPassword(value);
+    if (field === 'confirmPassword') setConfirmPassword(value);
+  };
 
   const handleNavigateSignIn = () => {
     navigate('/sign-in')
@@ -63,7 +58,7 @@ const SignUpPage = () => {
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
           <p>Đăng nhập vào tạo tài khoản</p>
-          <InputForm style={{ marginBottom: '10px' }} placeholder="abc@gmail.com" value={email} onChange={handleOnchangeEmail} />
+          <InputForm style={{ marginBottom: '10px' }} placeholder="abc@gmail.com" value={email} onChange={(value)=>handleOnchangeInput('email',value)} />
           <div style={{ position: 'relative' }}>
             <span
               onClick={() => setIsShowPassword(!isShowPassword)}
@@ -82,7 +77,7 @@ const SignUpPage = () => {
               }
             </span>
             <InputForm placeholder="password" style={{ marginBottom: '10px' }} type={isShowPassword ? "text" : "password"}
-              value={password} onChange={handleOnchangePassword} />
+              value={password} onChange={(value)=>handleOnchangeInput('password',value)} />
           </div>
           <div style={{ position: 'relative' }}>
             <span
@@ -102,11 +97,10 @@ const SignUpPage = () => {
               }
             </span>
             <InputForm placeholder="comfirm password" type={isShowConfirmPassword ? "text" : "password"}
-              value={confirmPassword} onChange={handleOnchangeConfirmPassword}
-            />
+              value={confirmPassword} onChange={(value=>handleOnchangeInput('confirmPassword',value))} /> 
           </div>
-          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
-          <Loading isLoading={isLoading}>
+          {isError && <span style={{ color: 'red' }}>{mutation.error.message}</span>}
+          <Loading isLoading={mutation.isLoading}>
             <ButtonComponent
               disabled={!email.length || !password.length || !confirmPassword.length}
               onClick={handleSignUp}
@@ -126,8 +120,8 @@ const SignUpPage = () => {
           <p>Bạn đã có tài khoản? <WrapperTextLight onClick={handleNavigateSignIn}> Đăng nhập</WrapperTextLight></p>
         </WrapperContainerLeft>
         <WrapperContainerRight>
-          <Image src={imageLogo} preview={false} alt="iamge-logo" height="203px" width="203px" />
-          <h4>Mua sắm tại LTTD</h4>
+          <Image src={imageLogo} preview={false} alt="iamge-logo" height="auto" width="235px" />
+          <h3>Mua sắm tại Vivita</h3>
         </WrapperContainerRight>
       </div>
     </div >

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import NavBarComponent from '../../components/NavBarComponent/NavBarComponent'
 import CardComponent from '../../components/CardComponent/CardComponent'
 import { Col, Pagination, Row } from 'antd'
@@ -26,7 +26,7 @@ const TypeProductPage = () => {
     const fetchProductType = async (type, page, limit) => {
         setLoading(true)
         const res = await ProductService.getProductType(type, page, limit)
-        if(res?.status == 'OK') {
+        if(res?.status === 'OK') {
             setLoading(false)
             setProducts(res?.data)
             setPanigate({...panigate, total: res?.totalPage})
@@ -61,6 +61,7 @@ const TypeProductPage = () => {
                                     }else if(pro?.name?.toLowerCase()?.includes(searchDebounce?.toLowerCase())) {
                                         return pro
                                     }
+                                    return pro
                                 })?.map((product) => {
                                     return (
                                         <CardComponent

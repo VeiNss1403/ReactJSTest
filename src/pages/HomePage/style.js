@@ -31,7 +31,3 @@ export const WrapperProducts = styled.div`
     margin-top:20px;
     flex-wrap: wrap;
 `
-export const WrapperSliders = styled.div`
-    display: flex;
-    gap: 10px;
-`
