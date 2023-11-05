@@ -1,25 +1,28 @@
-import { Table } from 'antd';
-import React, { useState, useRef } from 'react'
-import Loading from '../../components/LoadingComponent/Loading'
-import { useMemo } from 'react';
-import { DownloadTableExcel } from 'react-export-table-to-excel';
-import ButtonComponent from '../ButtonComponent/ButtonComponent';
+import { Table } from "antd";
+import React, { useState, useRef } from "react";
+import Loading from "../../components/LoadingComponent/Loading";
+import { useMemo } from "react";
+import { DownloadTableExcel } from "react-export-table-to-excel";
+import ButtonComponent from "../ButtonComponent/ButtonComponent";
 const TableComponent = (props) => {
-  const { selectionType = 'checkbox', data: dataSource = [], isLoading = false, columns, filename = [], handleDelteMany } = props
+  const {
+    selectionType = "checkbox",
+    data: dataSource = [],
+    isLoading = false,
+    columns,
+    filename = [],
+    handleDelteMany,
+  } = props;
   const [rowSelectedKeys, setRowSelectedKeys] = useState([])
-  const newColumnExport = useMemo(() => {
-    const arr = columns?.filter((col) => col.dataIndex !== 'action')
-    return arr
-  }, [columns])
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      setRowSelectedKeys(selectedRowKeys)
+      setRowSelectedKeys(selectedRowKeys);
     },
   };
   const handleDeleteAll = () => {
-    handleDelteMany(rowSelectedKeys)
-  }
+    handleDelteMany(rowSelectedKeys);
+  };
   const tableRef = useRef(null);
 
   return (
@@ -32,28 +35,29 @@ const TableComponent = (props) => {
         <ButtonComponent
           size={40}
           styleButton={{
-            background: 'green',
-            height: '36px',
-            borderRadius: '4px'
+            background: "green",
+            height: "36px",
+            borderRadius: "4px",
           }}
-          textbutton={'Xuất Excel'}
-          styleTextButton={{ color: '#fff', fontSize: '14px' }}
+          textbutton={"Xuất Excel"}
+          styleTextButton={{ color: "#fff", fontSize: "14px" }}
         />
       </DownloadTableExcel>
-      {!!rowSelectedKeys.length && (
-        <div style={{
-          background: '#1d1ddd',
-          color: '#fff',
-          fontWeight: 'bold',
-          padding: '10px',
-          cursor: 'pointer'
-        }}
+      {rowSelectedKeys.length >= 2 && (
+        <div
+          style={{
+            background: "#1d1ddd",
+            color: "#fff",
+            fontWeight: "bold",
+            padding: "10px",
+            cursor: "pointer",
+          }}
           onClick={handleDeleteAll}
         >
           Xóa tất cả
         </div>
       )}
-      
+
       <Table
         ref={tableRef}
         rowSelection={{
@@ -65,7 +69,7 @@ const TableComponent = (props) => {
         {...props}
       />
     </Loading>
-  )
-}
+  );
+};
 
-export default TableComponent
+export default TableComponent;

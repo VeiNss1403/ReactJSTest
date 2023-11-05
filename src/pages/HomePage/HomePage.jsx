@@ -61,7 +61,7 @@ const HomePage = () => {
       </WrapperTypeProductContent>
       <div className='body' style={{ width: '100%', backgroundColor: '#efefef', }}>
         <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} arrImageRight={[image1, image2, image3]} />
-        <div id="container" style={{ height: '1000px', width: '1270px', margin: '0 auto' }}>
+        <div id="container" style={{height:'auto', width: '1270px', margin: '0 auto', padding:20 }}>
           <WrapperProducts>
             {products?.data?.map((product) => {
               return (
@@ -81,7 +81,7 @@ const HomePage = () => {
               )
             })}
           </WrapperProducts>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
             <WrapperButtonMore
               textbutton={isPreviousData ? 'Load more' : "Xem thêm"} type="outline" styleButton={{
                 border: `1px solid ${products?.total === products?.data?.length ? '#f5f5f5' : '#9255FD'}`, color: `${products?.total === products?.data?.length ? '#f5f5f5' : '#9255FD'}`,

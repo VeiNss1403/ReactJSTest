@@ -6,10 +6,10 @@ export const WrapperCardStyle = styled(Card)`
     & img {
         height: 200px;
         width: 200px;
-    },
+    };
     position: relative;
     background-color: ${props => props.disabled ? '#ccc' : '#fff'};
-    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
 `
 
 export const StyleNameProduct = styled.div`
@@ -17,7 +17,7 @@ export const StyleNameProduct = styled.div`
     font-size: 12px;
     line-height: 16px;
     color: rgb(56, 56, 61);
-    font-weight: 400;
+    min-height: 48px;
 `
 
 export const WrapperReportText = styled.div`
