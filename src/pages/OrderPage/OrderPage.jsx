@@ -105,7 +105,7 @@ const OrderPage = () => {
   const priceDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
       const totalDiscount = cur.discount ? cur.discount : 0
-      return total + (priceMemo * (totalDiscount  * cur.amount) / 100)
+      return total + (priceMemo * totalDiscount  / 100)* cur.amount
     },0)
     if(Number(result)){
       return result
@@ -114,7 +114,7 @@ const OrderPage = () => {
   },[order])
 
   const diliveryPriceMemo = useMemo(() => {
-    if(priceMemo >= 20000 && priceMemo < 500000){
+    if(priceMemo >= 200000 && priceMemo < 500000){
       return 10000
     }else if(priceMemo >= 500000 || order?.orderItemsSlected?.length === 0) {
       return 0

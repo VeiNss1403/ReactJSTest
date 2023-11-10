@@ -62,6 +62,8 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
       navigate('/profile-user')
     }else if(type === 'admin') {
       navigate('/system/admin')
+    }else if(type === 'products') {
+      navigate('/products')
     }else if(type === 'my-order') {
       navigate('/my-order',{ state : {
           id: user?.id,
@@ -87,7 +89,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         </Col>
         <Col span={6} style={{display:'flex'}}>
           <WrapperHearderMenu>Giới thiệu Vivita</WrapperHearderMenu> 
-          <WrapperHearderMenu>Tin mới Vivita</WrapperHearderMenu>
+          <WrapperHearderMenu onClick={() => handleClickNavigate('products')}>Sản phẩm</WrapperHearderMenu>
         </Col>
         {!isHiddenSearch && (
           <Col span={10}>
@@ -132,10 +134,9 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           </Loading>
           {!isHiddenCart && (
             <div onClick={() => navigate('/order')} style={{cursor: 'pointer'}}>
-              <Badge count={order?.orderItems?.length} size="small">
-                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#000' }} />
+              <Badge count={order?.orderItems?.length} >
+                <ShoppingCartOutlined style={{ fontSize: '35px', color: '#000' }} />
               </Badge>
-              <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
             </div>
           )}
         </Col>

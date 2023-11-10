@@ -592,7 +592,7 @@ const AdminProduct = () => {
           columns={columns}
           isLoading={isLoadingProducts}
           data={dataTable}
-          pagination={{ pageSize: 3 }}
+          //pagination={{ pageSize: 3 }}
           scroll={{ x: 1600 }}
           onRow={(record, rowIndex) => {
             return {
@@ -850,8 +850,8 @@ const AdminProduct = () => {
         <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
           <Form
             name="basic"
-            labelCol={{ span: 2 }}
-            wrapperCol={{ span: 22 }}
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 21 }}
             onFinish={onUpdateProduct}
             autoComplete="on"
             form={form}

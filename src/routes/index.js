@@ -7,7 +7,7 @@ import OrderPage from "../pages/OrderPage/OrderPage";
 import OrderSucess from "../pages/OrderSuccess/OrderSuccess";
 import PaymentPage from "../pages/PaymentPage/PaymentPage";
 import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
-import ProductsPage from "../pages/ProductsPage/ProductsPage";
+import ProductPage from "../pages/ProductPage/ProductPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
@@ -46,7 +46,7 @@ export const routes = [
     },
     {
         path: '/products',
-        page: ProductsPage,
+        page: ProductPage,
         isShowHeader: true
     },
     {
