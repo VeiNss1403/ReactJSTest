@@ -36,6 +36,7 @@ const AdminProduct = () => {
     description: "",
     rating: "",
     image: "",
+    miniImages: [],
     type: "",
     countInStock: "",
     newType: "",
@@ -47,10 +48,6 @@ const AdminProduct = () => {
     ingredient: "",
   });
   const [stateProduct, setStateProduct] = useState(inittial());
-  console.log(
-    "🚀 ~ file: AdminProduct.jsx:49 ~ AdminProduct ~ stateProduct:",
-    stateProduct
-  );
   const [stateProductDetails, setStateProductDetails] = useState(inittial());
 
   const [form] = Form.useForm();
@@ -62,6 +59,7 @@ const AdminProduct = () => {
       description,
       rating,
       image,
+      miniImages = [],
       type,
       countInStock,
       discount,
@@ -77,6 +75,7 @@ const AdminProduct = () => {
       description,
       rating,
       image,
+      miniImages,
       type,
       countInStock,
       discount,
@@ -120,6 +119,7 @@ const AdminProduct = () => {
         description: res?.data?.description,
         rating: res?.data?.rating,
         image: res?.data?.image,
+        miniImages: res?.data?.miniImages,
         type: res?.data?.type,
         countInStock: res?.data?.countInStock,
         discount: res?.data?.discount,
@@ -169,7 +169,6 @@ const AdminProduct = () => {
   };
 
   const { data, isLoading, isSuccess, isError } = mutation;
-  console.log("🚀 ~ file: AdminProduct.jsx:162 ~ AdminProduct ~ data:", data);
   const {
     data: dataUpdated,
     isLoading: isLoadingUpdated,
@@ -308,7 +307,7 @@ const AdminProduct = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       fixed: "left",
-      width: '31%',
+      width: "31%",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
@@ -435,6 +434,7 @@ const AdminProduct = () => {
       description: "",
       rating: "",
       image: "",
+      miniImages: [],
       type: "",
       countInStock: "",
       miniType: "",
@@ -478,6 +478,7 @@ const AdminProduct = () => {
       description: "",
       rating: "",
       image: "",
+      miniImages: [],
       type: "",
       countInStock: "",
       discount: "",
@@ -497,6 +498,7 @@ const AdminProduct = () => {
       description: stateProduct.description,
       rating: stateProduct.rating,
       image: stateProduct.image,
+      miniImages: stateProduct.miniImages,
       type:
         stateProduct.type === "add_type"
           ? stateProduct.newType
@@ -551,6 +553,43 @@ const AdminProduct = () => {
       image: file.preview,
     });
   };
+
+  const handleOnchangeAvatarMini = async ({ fileList }) => {
+    const currentImages = [...stateProduct.miniImages];
+    await Promise.all(
+      fileList.map(async (file) => {
+        if (!file.url && !file.preview) {
+          file.preview = await getBase64(file.originFileObj);
+        }
+        if (!currentImages.includes(file.preview)) {
+          currentImages.push(file.preview);
+        }
+      })
+    );
+    setStateProduct((prevState) => ({
+      ...prevState,
+      miniImages: currentImages,
+    }));
+  };
+
+  const handleOnchangeAvatarMiniDetails = async ({ fileList }) => {
+    const currentImages = [...stateProductDetails.miniImages];
+    await Promise.all(
+      fileList.map(async (file) => {
+        if (!file.url && !file.preview) {
+          file.preview = await getBase64(file.originFileObj);
+        }
+        if (!currentImages.includes(file.preview)) {
+          currentImages.push(file.preview);
+        }
+      })
+    );
+    setStateProductDetails({
+      ...stateProductDetails,
+      miniImages: currentImages,
+    });
+  };
+
   const onUpdateProduct = () => {
     mutationUpdate.mutate(
       { id: rowSelected, token: user?.access_token, ...stateProductDetails },
@@ -567,6 +606,22 @@ const AdminProduct = () => {
       ...stateProduct,
       type: value,
     });
+  };
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...stateProductDetails.miniImages];
+    updatedImages.splice(index, 1);
+    setStateProductDetails({
+      ...stateProductDetails,
+      miniImages: updatedImages,
+    });
+  };
+  const handleRemoveImageCreate = (index) => {
+    const currentImages = [...stateProduct.miniImages];
+    currentImages.splice(index, 1);
+    setStateProduct((prevState) => ({
+      ...prevState,
+      miniImages: currentImages,
+    }));
   };
 
   return (
@@ -585,7 +640,7 @@ const AdminProduct = () => {
           <PlusOutlined style={{ fontSize: "60px" }} />
         </Button>
       </div>
-      <div style={{ marginTop: "20px"}}>
+      <div style={{ marginTop: "20px" }}>
         <TableComponent
           filename={"Sản phẩm"}
           handleDelteMany={handleDelteManyProducts}
@@ -614,8 +669,8 @@ const AdminProduct = () => {
         <Loading isLoading={isLoading}>
           <Form
             name="basic"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 19 }}
             onFinish={onFinish}
             autoComplete="on"
             form={form}
@@ -740,7 +795,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.miniType}
                 onChange={handleOnchange}
                 name="miniType"
               />
@@ -756,7 +811,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.brand}
                 onChange={handleOnchange}
                 name="brand"
               />
@@ -772,7 +827,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.country}
                 onChange={handleOnchange}
                 name="country"
               />
@@ -788,7 +843,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.forPerson}
                 onChange={handleOnchange}
                 name="forPerson"
               />
@@ -804,7 +859,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.ingredient}
                 onChange={handleOnchange}
                 name="ingredient"
               />
@@ -831,6 +886,46 @@ const AdminProduct = () => {
                     alt="avatar"
                   />
                 )}
+              </WrapperUploadFile>
+            </Form.Item>
+            <Form.Item
+              label="Ảnh minh họa"
+              name="miniImages"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn ít nhất một hình ảnh!",
+                },
+              ]}
+            >
+              <WrapperUploadFile
+                onChange={handleOnchangeAvatarMini}
+                maxCount={5}
+              >
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Button>Chọn tệp</Button>
+                  {stateProduct?.miniImages?.map((image, index) => (
+                    <div
+                      key={index}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <img
+                        src={image}
+                        style={{
+                          height: "60px",
+                          width: "60px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          marginLeft: "10px",
+                        }}
+                        alt={`avatar_${index}`}
+                      />
+                      <Button onClick={() => handleRemoveImageCreate(index)}>
+                        Xóa ảnh
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </WrapperUploadFile>
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
@@ -867,7 +962,6 @@ const AdminProduct = () => {
                 name="name"
               />
             </Form.Item>
-
             <Form.Item
               label="Danh mục sản phẩm"
               name="type"
@@ -895,9 +989,7 @@ const AdminProduct = () => {
             <Form.Item
               label="Giá sản phẩm"
               name="price"
-              rules={[
-                { required: true, message: "Please input your price!" },
-              ]}
+              rules={[{ required: true, message: "Please input your price!" }]}
             >
               <InputComponent
                 value={stateProductDetails.price}
@@ -924,9 +1016,7 @@ const AdminProduct = () => {
             <Form.Item
               label="Đánh giá sản phẩm"
               name="rating"
-              rules={[
-                { required: true, message: "Please input your rating!" },
-              ]}
+              rules={[{ required: true, message: "Please input your rating!" }]}
             >
               <InputComponent
                 value={stateProductDetails.rating}
@@ -961,7 +1051,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.miniType}
                 onChange={handleOnchangeDetails}
                 name="miniType"
               />
@@ -977,7 +1067,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.brand}
                 onChange={handleOnchangeDetails}
                 name="brand"
               />
@@ -993,7 +1083,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.country}
                 onChange={handleOnchangeDetails}
                 name="country"
               />
@@ -1009,7 +1099,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.forPerson}
                 onChange={handleOnchangeDetails}
                 name="forPerson"
               />
@@ -1025,7 +1115,7 @@ const AdminProduct = () => {
               ]}
             >
               <InputComponent
-                value={stateProduct.discount}
+                value={stateProduct.ingredient}
                 onChange={handleOnchangeDetails}
                 name="ingredient"
               />
@@ -1033,9 +1123,7 @@ const AdminProduct = () => {
             <Form.Item
               label="Hình ảnh sản phẩm"
               name="image"
-              rules={[
-                { required: true, message: "Please input your image!" },
-              ]}
+              rules={[{ required: true, message: "Please input your image!" }]}
             >
               <WrapperUploadFile
                 onChange={handleOnchangeAvatarDetails}
@@ -1057,6 +1145,47 @@ const AdminProduct = () => {
                 )}
               </WrapperUploadFile>
             </Form.Item>
+            <Form.Item
+              label="Hình ảnh minh họa"
+              name="miniImages"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn ít nhất một hình ảnh!",
+                },
+              ]}
+            >
+              <WrapperUploadFile
+                onChange={handleOnchangeAvatarMiniDetails}
+                maxCount={6}
+              >
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Button>Chọn tệp</Button>
+                  {stateProductDetails?.miniImages?.map((image, index) => (
+                    <div
+                      key={index}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <img
+                        src={image}
+                        style={{
+                          height: "60px",
+                          width: "60px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          marginLeft: "10px",
+                        }}
+                        alt={`avatar_${index}`}
+                      />
+                      <Button onClick={() => handleRemoveImage(index)}>
+                        Xóa ảnh
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </WrapperUploadFile>
+            </Form.Item>
+
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Apply
