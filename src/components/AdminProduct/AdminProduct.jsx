@@ -1,4 +1,4 @@
-import { Button, Form, Image, Select, Space } from "antd";
+import { Button, Form, Image, Select, Space, Upload } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -6,7 +6,11 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import React, { useRef } from "react";
-import { WrapperHeader, WrapperUploadFile } from "./style";
+import {
+  WrapperHeader,
+  WrapperUploadFile,
+  WrapperUploadFileMini,
+} from "./style";
 import TableComponent from "../TableComponent/TableComponent";
 import { useState } from "react";
 import InputComponent from "../InputComponent/InputComponent";
@@ -49,6 +53,13 @@ const AdminProduct = () => {
   });
   const [stateProduct, setStateProduct] = useState(inittial());
   const [stateProductDetails, setStateProductDetails] = useState(inittial());
+  const [fileList, setFileList] = useState([
+    // {
+    //   uid: "-1",
+    //   thumbUrl:
+    //     "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    // },
+  ]);
 
   const [form] = Form.useForm();
 
@@ -443,6 +454,7 @@ const AdminProduct = () => {
       forPerson: "",
       ingredient: "",
     });
+    setFileList([]);
     form.resetFields();
   };
 
@@ -488,6 +500,7 @@ const AdminProduct = () => {
       forPerson: "",
       ingredient: "",
     });
+    setFileList([]);
     form.resetFields();
   };
 
@@ -554,22 +567,35 @@ const AdminProduct = () => {
     });
   };
 
+  const handleUploadFile = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+  };
+
   const handleOnchangeAvatarMini = async ({ fileList }) => {
-    const currentImages = [...stateProduct.miniImages];
-    await Promise.all(
+    console.log(
+      "🚀 ~ file: AdminProduct.jsx:573 ~ handleOnchangeAvatarMini ~ fileList:",
+      fileList
+    );
+
+    const currentImages = await Promise.all(
       fileList.map(async (file) => {
-        if (!file.url && !file.preview) {
-          file.preview = await getBase64(file.originFileObj);
+        if (!file.thumbUrl) {
+          file.thumbUrl = await getBase64(file.originFileObj);
         }
-        if (!currentImages.includes(file.preview)) {
-          currentImages.push(file.preview);
-        }
+        return file.thumbUrl;
       })
+    );
+    console.log(
+      "🚀 ~ file: AdminProduct.jsx:575 ~ handleOnchangeAvatarMini ~ currentImages:",
+      currentImages
     );
     setStateProduct((prevState) => ({
       ...prevState,
       miniImages: currentImages,
     }));
+    setFileList(fileList);
   };
 
   const handleOnchangeAvatarMiniDetails = async ({ fileList }) => {
@@ -623,6 +649,7 @@ const AdminProduct = () => {
       miniImages: currentImages,
     }));
   };
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
 
   return (
     <div>
@@ -647,8 +674,7 @@ const AdminProduct = () => {
           columns={columns}
           isLoading={isLoadingProducts}
           data={dataTable}
-          //pagination={{ pageSize: 3 }}
-          scroll={{ x: 1600 }}
+          pagination={{ pageSize: 3 }}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
@@ -898,7 +924,38 @@ const AdminProduct = () => {
                 },
               ]}
             >
-              <WrapperUploadFile
+              <Upload
+                multiple
+                action="http://localhost:3000/system/admin" // Đặt action thành địa chỉ của server endpoint
+                method="post"
+                listType="picture-card"
+                fileList={fileList}
+                // onPreview={handlePreview}
+                onChange={handleOnchangeAvatarMini}
+                beforeUpload={() => {
+                  return false;
+                }}
+              >
+                <Button>Chọn tệp</Button>
+              </Upload>
+              {/* <WrapperUploadFileMini
+                customRequest={handleUploadFile}
+                onChange={handleOnchangeAvatarMini}
+                listType="picture-card"
+                fileList={fileList}
+                // itemRender={(originNode, file, fileList, actions) => {
+                //   return (
+                //     <DraggableUploadListItem
+                //       originNode={originNode}
+                //       file={file}
+                //       actions={actions}
+                //     />
+                //   );
+                // }}
+              >
+                <Button>Chọn tệp</Button>
+              </WrapperUploadFileMini> */}
+              {/* <WrapperUploadFile
                 onChange={handleOnchangeAvatarMini}
                 maxCount={5}
               >
@@ -926,7 +983,7 @@ const AdminProduct = () => {
                     </div>
                   ))}
                 </div>
-              </WrapperUploadFile>
+              </WrapperUploadFile> */}
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
@@ -1209,3 +1266,22 @@ const AdminProduct = () => {
 };
 
 export default AdminProduct;
+
+const DraggableUploadListItem = ({ originNode, file, actions }) => {
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <img
+        src={file?.thumbUrl}
+        style={{
+          height: "60px",
+          width: "60px",
+          borderRadius: "50%",
+          objectFit: "cover",
+          marginLeft: "10px",
+        }}
+        alt={`avatar_${file?.uid}`}
+      />
+      <Button onClick={actions.remove}>Xóa ảnh</Button>
+    </div>
+  );
+};
