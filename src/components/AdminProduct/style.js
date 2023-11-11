@@ -16,3 +16,10 @@ export const WrapperUploadFile = styled(Upload)`
     display: none;
   }
 `;
+
+export const WrapperUploadFileMini = styled(Upload)`
+  & .ant-upload-wrapper.sc-hIueGu.joRlKk.css-dev-only-do-not-override-i0102m{
+    display: flex;
+    align-items: center;
+  }
+`;
