@@ -11,6 +11,8 @@ import {
   WrapperDescriptionTitle,
   WrapperDescriptionContent,
   WrapperCommit,
+  WrapperStyleColImage,
+  WrapperStyleImageSmall,
 } from "./style";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
@@ -92,6 +94,11 @@ const ProductDetailsComponent = ({ idProduct }) => {
     fetchGetDetailsProduct,
     { enabled: !!idProduct }
   );
+  console.log(
+    "🚀 ~ file: ProductDetailsComponent.jsx:93 ~ ProductDetailsComponent ~ productDetails:",
+    productDetails
+  );
+
   const handleAddOrderProduct = () => {
     if (!user?.id) {
       navigate("/sign-in", { state: location?.pathname });
@@ -152,54 +159,17 @@ const ProductDetailsComponent = ({ idProduct }) => {
             alt="image prodcut"
             preview={false}
           />
-          {/* <Row style={{ paddingTop: "10px", justifyContent: "space-between" }}>
-            <WrapperStyleColImage span={4} sty>
-              <WrapperStyleImageSmall
-                src={imageProductSmall}
-                alt="image small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src={imageProductSmall}
-                alt="image small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src={imageProductSmall}
-                alt="image small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src={imageProductSmall}
-                alt="image small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src={imageProductSmall}
-                alt="image small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src={imageProductSmall}
-                alt="image small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-          </Row> */}
+          <Row style={{ paddingTop: "10px", justifyContent: "space-between" }}>
+            {productDetails?.miniImages?.map((image) => (
+              <WrapperStyleColImage span={4}>
+                <WrapperStyleImageSmall
+                  src={image}
+                  alt="image small"
+                  preview={false}
+                />
+              </WrapperStyleColImage>
+            ))}
+          </Row>
         </Col>
         <Col span={14} style={{ paddingLeft: "10px" }}>
           <WrapperStyleNameProduct>
@@ -298,18 +268,6 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 <div style={{ color: "red" }}>San pham het hang</div>
               )}
             </div>
-            <ButtonComponent
-              size={40}
-              styleButton={{
-                background: "#fff",
-                height: "48px",
-                width: "220px",
-                border: "1px solid rgb(13, 92, 182)",
-                borderRadius: "4px",
-              }}
-              textbutton={"Mua trả sau"}
-              styleTextButton={{ color: "rgb(13, 92, 182)", fontSize: "15px" }}
-            ></ButtonComponent>
           </div>
         </Col>
         <CommentComponent

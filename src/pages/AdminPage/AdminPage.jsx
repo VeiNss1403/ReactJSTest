@@ -86,7 +86,7 @@ const AdminPage = () => {
   }
   return (
     <>
-      <HeaderComponent isHiddenSearch isHiddenCart />
+      <HeaderComponent isHiddenSearch isHiddenCart isHiddenElement/>
       <div style={{ display: 'flex', overflowX: 'hidden' }}>
         <Menu
           mode="inline"

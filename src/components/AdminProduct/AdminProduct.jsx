@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Form, Image, Select, Space, Upload } from "antd";
 import {
   PlusOutlined,
@@ -25,6 +26,7 @@ import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import TextArea from "antd/es/input/TextArea";
+import UploadComponent from "../UploadComponent/UploadComponent";
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -141,7 +143,6 @@ const AdminProduct = () => {
         ingredient: res?.data?.ingredient,
       });
     }
-    setIsLoadingUpdate(false);
   };
 
   useEffect(() => {
@@ -156,6 +157,7 @@ const AdminProduct = () => {
     if (rowSelected && isOpenDrawer) {
       setIsLoadingUpdate(true);
       fetchGetDetailsProduct(rowSelected);
+      setIsLoadingUpdate(false);
     }
   }, [rowSelected, isOpenDrawer]);
 
@@ -297,20 +299,6 @@ const AdminProduct = () => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    // render: (text) =>
-    //   searchedColumn === dataIndex ? (
-    //     // <Highlighter
-    //     //   highlightStyle={{
-    //     //     backgroundColor: '#ffc069',
-    //     //     padding: 0,
-    //     //   }}
-    //     //   searchWords={[searchText]}
-    //     //   autoEscape
-    //     //   textToHighlight={text ? text.toString() : ''}
-    //     // />
-    //   ) : (
-    //     text
-    //   ),
   });
 
   const columns = [
@@ -547,12 +535,13 @@ const AdminProduct = () => {
 
   const handleOnchangeAvatar = async ({ fileList }) => {
     const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setStateProduct({
-      ...stateProduct,
-      image: file.preview,
+    file.thumbUrl = await getBase64(file.originFileObj);
+    setStateProduct((prevState) => {
+      // Sử dụng prevState để đảm bảo rằng trạng thái được cập nhật đúng cách
+      return {
+        ...prevState,
+        image: file.thumbUrl,
+      };
     });
   };
 
@@ -566,19 +555,15 @@ const AdminProduct = () => {
       image: file.preview,
     });
   };
-
-  const handleUploadFile = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess("ok");
-    }, 0);
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...stateProductDetails.miniImages];
+    updatedImages.splice(index, 1);
+    setStateProductDetails({
+      ...stateProductDetails,
+      miniImages: updatedImages,
+    });
   };
-
   const handleOnchangeAvatarMini = async ({ fileList }) => {
-    console.log(
-      "🚀 ~ file: AdminProduct.jsx:573 ~ handleOnchangeAvatarMini ~ fileList:",
-      fileList
-    );
-
     const currentImages = await Promise.all(
       fileList.map(async (file) => {
         if (!file.thumbUrl) {
@@ -586,10 +571,6 @@ const AdminProduct = () => {
         }
         return file.thumbUrl;
       })
-    );
-    console.log(
-      "🚀 ~ file: AdminProduct.jsx:575 ~ handleOnchangeAvatarMini ~ currentImages:",
-      currentImages
     );
     setStateProduct((prevState) => ({
       ...prevState,
@@ -633,23 +614,6 @@ const AdminProduct = () => {
       type: value,
     });
   };
-  const handleRemoveImage = (index) => {
-    const updatedImages = [...stateProductDetails.miniImages];
-    updatedImages.splice(index, 1);
-    setStateProductDetails({
-      ...stateProductDetails,
-      miniImages: updatedImages,
-    });
-  };
-  const handleRemoveImageCreate = (index) => {
-    const currentImages = [...stateProduct.miniImages];
-    currentImages.splice(index, 1);
-    setStateProduct((prevState) => ({
-      ...prevState,
-      miniImages: currentImages,
-    }));
-  };
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
 
   return (
     <div>
@@ -897,7 +861,7 @@ const AdminProduct = () => {
                 { required: true, message: "Please input your count image!" },
               ]}
             >
-              <WrapperUploadFile onChange={handleOnchangeAvatar} maxCount={1}>
+              {/* <WrapperUploadFile onChange={handleOnchangeAvatar} maxCount={1}>
                 <Button>Select File</Button>
                 {stateProduct?.image && (
                   <img
@@ -912,7 +876,16 @@ const AdminProduct = () => {
                     alt="avatar"
                   />
                 )}
-              </WrapperUploadFile>
+              </WrapperUploadFile> */}
+              <UploadComponent
+                maxCount={1}
+                action="http://localhost:3000/system/admin"
+                method="post"
+                onChange={handleOnchangeAvatar}
+                beforeUpload={() => {
+                  return false;
+                }}
+              />
             </Form.Item>
             <Form.Item
               label="Ảnh minh họa"
@@ -924,66 +897,17 @@ const AdminProduct = () => {
                 },
               ]}
             >
-              <Upload
+              <UploadComponent
+                maxCount={6}
                 multiple
-                action="http://localhost:3000/system/admin" // Đặt action thành địa chỉ của server endpoint
+                action="http://localhost:3000/system/admin"
                 method="post"
-                listType="picture-card"
                 fileList={fileList}
-                // onPreview={handlePreview}
                 onChange={handleOnchangeAvatarMini}
                 beforeUpload={() => {
                   return false;
                 }}
-              >
-                <Button>Chọn tệp</Button>
-              </Upload>
-              {/* <WrapperUploadFileMini
-                customRequest={handleUploadFile}
-                onChange={handleOnchangeAvatarMini}
-                listType="picture-card"
-                fileList={fileList}
-                // itemRender={(originNode, file, fileList, actions) => {
-                //   return (
-                //     <DraggableUploadListItem
-                //       originNode={originNode}
-                //       file={file}
-                //       actions={actions}
-                //     />
-                //   );
-                // }}
-              >
-                <Button>Chọn tệp</Button>
-              </WrapperUploadFileMini> */}
-              {/* <WrapperUploadFile
-                onChange={handleOnchangeAvatarMini}
-                maxCount={5}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Button>Chọn tệp</Button>
-                  {stateProduct?.miniImages?.map((image, index) => (
-                    <div
-                      key={index}
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      <img
-                        src={image}
-                        style={{
-                          height: "60px",
-                          width: "60px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          marginLeft: "10px",
-                        }}
-                        alt={`avatar_${index}`}
-                      />
-                      <Button onClick={() => handleRemoveImageCreate(index)}>
-                        Xóa ảnh
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </WrapperUploadFile> */}
+              />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
@@ -1186,17 +1110,19 @@ const AdminProduct = () => {
                 onChange={handleOnchangeAvatarDetails}
                 maxCount={1}
               >
-                <Button>Select File</Button>
+                <Button>Thêm ảnh</Button>
                 {stateProductDetails?.image && (
                   <img
                     src={stateProductDetails?.image}
                     style={{
-                      height: "60px",
-                      width: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      marginLeft: "10px",
-                    }}
+                          height: "102px",
+                          width: "102px",
+                          borderRadius: "8px",
+                          padding: "8px",
+                          border:'1px solid #d9d9d9',
+                          objectFit: "cover",
+                          cursor:'default'
+                        }}
                     alt="avatar"
                   />
                 )}
@@ -1214,23 +1140,25 @@ const AdminProduct = () => {
             >
               <WrapperUploadFile
                 onChange={handleOnchangeAvatarMiniDetails}
-                maxCount={6}
+                maxCount={100}
               >
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Button>Chọn tệp</Button>
                   {stateProductDetails?.miniImages?.map((image, index) => (
                     <div
                       key={index}
-                      style={{ display: "flex", alignItems: "center" }}
+                      style={{display: "flex", alignItems: "center", marginLeft:'5px'}}
                     >
                       <img
                         src={image}
                         style={{
-                          height: "60px",
-                          width: "60px",
-                          borderRadius: "50%",
+                          height: "102px",
+                          width: "102px",
+                          borderRadius: "8px",
+                          padding: "8px",
+                          border:'1px solid #d9d9d9',
                           objectFit: "cover",
-                          marginLeft: "10px",
+                          cursor:'default'
                         }}
                         alt={`avatar_${index}`}
                       />
@@ -1266,22 +1194,3 @@ const AdminProduct = () => {
 };
 
 export default AdminProduct;
-
-const DraggableUploadListItem = ({ originNode, file, actions }) => {
-  return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <img
-        src={file?.thumbUrl}
-        style={{
-          height: "60px",
-          width: "60px",
-          borderRadius: "50%",
-          objectFit: "cover",
-          marginLeft: "10px",
-        }}
-        alt={`avatar_${file?.uid}`}
-      />
-      <Button onClick={actions.remove}>Xóa ảnh</Button>
-    </div>
-  );
-};
