@@ -7,6 +7,7 @@ import {
   WrapperHearderMenu,
   WrapperTextHeader,
   WrapperTextHeaderSmall,
+  WrapperUserName,
 } from "./style";
 import {
   UserOutlined,
@@ -22,7 +23,7 @@ import { useState } from "react";
 import Loading from "../LoadingComponent/Loading";
 import { useEffect } from "react";
 import { searchProduct } from "../../redux/slides/productSlide";
-import logoImage from "../../Assets/Images/logo/logoVivita.png";
+import logoImage from "../../Assets/Images/logo/logo.png";
 
 const HeaderComponent = ({
   isHiddenSearch = false,
@@ -128,7 +129,7 @@ const HeaderComponent = ({
         <Col span={6} style={{ display: "flex" }}>
           {!isHiddenElement && (
             <>
-              <WrapperHearderMenu>Giới thiệu Vivita</WrapperHearderMenu>
+              <WrapperHearderMenu>Giới thiệu ECONUTRI</WrapperHearderMenu>
               <WrapperHearderMenu
                 onClick={() => handleClickNavigate("products")}
               >
@@ -144,7 +145,7 @@ const HeaderComponent = ({
               textbutton="Tìm kiếm"
               placeholder="Tìm kiếm sản phẩm..."
               onChange={onSearch}
-              backgroundColorButton="linear-gradient(180deg, #DF171F 30.21%, #A22A2F 100%)"
+              backgroundColorButton="#00adb5"
             />
           </Col>
         )}
@@ -171,17 +172,11 @@ const HeaderComponent = ({
               {user?.access_token ? (
                 <>
                   <Popover content={content} trigger="click" open={isOpenPopup}>
-                    <div
-                      style={{
-                        cursor: "pointer",
-                        maxWidth: 100,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
+                    <WrapperUserName
                       onClick={() => setIsOpenPopup((prev) => !prev)}
                     >
                       {userName?.length ? userName : user?.email}
-                    </div>
+                    </WrapperUserName>
                   </Popover>
                 </>
               ) : (

@@ -64,6 +64,7 @@ export const WrapperNameProduct = styled.div`
 
 export const WrapperItem = styled.div`
   width: 200px;
+  text-align: center;
   font-weight: bold;
   &:last-child {
     color: red
@@ -71,6 +72,7 @@ export const WrapperItem = styled.div`
 `
 export const WrapperItemLabel = styled.div`
   width: 200px;
+  text-align: center;
   &:last-child {
     font-weight: bold;
   }

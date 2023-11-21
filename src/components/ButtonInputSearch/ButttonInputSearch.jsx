@@ -20,7 +20,7 @@ const ButttonInputSearch = (props) => {
         bordered={bordered}
         style={{
           backgroundColor: backgroundColorInput,
-          border: '1px solid #df171f',
+          border: '1px solid #00adb5',
           borderRadius: '5px 0px 0px 5px',
         }}
         {...props}

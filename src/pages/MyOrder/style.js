@@ -43,12 +43,12 @@ export const WrapperListOrder = styled.div`
 `
 export const WrapperFooterItem = styled.div`
   display: flex;
-  flex-direction : column;
   gap: 10px;
   border-top: 1px solid rgb(235, 235, 240);
   width: 100%;
   align-items:flex-end;
   padding-top: 10px;
+  justify-content: space-between;
 `
 
 export const WrapperHeaderItem = styled.div`

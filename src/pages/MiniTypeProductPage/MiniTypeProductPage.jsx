@@ -11,7 +11,7 @@ import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
 
-const TypeProductPage = () => {
+const MiniTypeProductPage = () => {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
 
@@ -23,9 +23,9 @@ const TypeProductPage = () => {
     limit: 10,
     total: 1,
   });
-  const fetchProductType = async (type, page, limit) => {
+  const fetchProductType = async (miniType, page, limit) => {
     setLoading(true);
-    const res = await ProductService.getProductType(type, page, limit);
+    const res = await ProductService.getProductMiniType(miniType, page, limit);
     if (res?.status === "OK") {
       setLoading(false);
       setProducts(res?.data);
@@ -111,4 +111,4 @@ const TypeProductPage = () => {
   );
 };
 
-export default TypeProductPage;
+export default MiniTypeProductPage;

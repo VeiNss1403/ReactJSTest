@@ -1,32 +1,43 @@
 import styled from "styled-components";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 export const WrapperTypeProductContent = styled.div`
-    background-image: url('https://vivita.cdn.vccloud.vn/wp-content/themes/stsk2020/assets/images/bg_red.png'); 
-`
+  background-color: #00adb5;
+`;
 export const WrapperTypeProduct = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 1270px;
-    margin: 0 auto;
-`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 1270px;
+  margin: 0 auto;
+`;
 
 export const WrapperButtonMore = styled(ButtonComponent)`
-    &:hover {
-        color: #fff;
-        background: #9255FD;
-        span {
-            color: #fff;
-        }
+  &:hover {
+    color: #fff;
+    background: #00adb5;
+    span {
+      color: #fff;
     }
-    width: 100%;
-    color: #9255FD;
-    text-align: center;
-    cursor: ${(props) => props.disabled ? 'not-allowed' : 'pointers'}
-`
+  }
+  width: 100%;
+  color: #00adb5;
+  text-align: center;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointers")};
+`;
 
 export const WrapperProducts = styled.div`
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-`
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+`;
+export const WrapperMiniType = styled.div`
+  color: #00adb5;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 24px;
+  font-family: Inter, sans-serif;
+  &:hover {
+    color: #6c757d;
+  }
+`;

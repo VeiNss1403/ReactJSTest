@@ -19,7 +19,6 @@ const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false)
   const [email, setEmail] = useState('');
-  console.log("🚀 ~ file: SignUpPage.jsx:22 ~ SignUpPage ~ email:", email)
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   

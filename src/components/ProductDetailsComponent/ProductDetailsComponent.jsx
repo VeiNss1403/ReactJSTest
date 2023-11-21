@@ -13,6 +13,7 @@ import {
   WrapperCommit,
   WrapperStyleColImage,
   WrapperStyleImageSmall,
+  WrapperMiniTitle,
 } from "./style";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
@@ -94,10 +95,6 @@ const ProductDetailsComponent = ({ idProduct }) => {
     fetchGetDetailsProduct,
     { enabled: !!idProduct }
   );
-  console.log(
-    "🚀 ~ file: ProductDetailsComponent.jsx:93 ~ ProductDetailsComponent ~ productDetails:",
-    productDetails
-  );
 
   const handleAddOrderProduct = () => {
     if (!user?.id) {
@@ -139,7 +136,15 @@ const ProductDetailsComponent = ({ idProduct }) => {
       }
     }
   };
-
+  const handleNavigatetype = (miniType) => {
+    navigate(
+      `/product/miniType/${miniType
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        ?.replace(/ /g, "_")}`,
+      { state: miniType }
+    );
+  };
   return (
     <Loading isLoading={isLoading}>
       <Row
@@ -175,7 +180,15 @@ const ProductDetailsComponent = ({ idProduct }) => {
           <WrapperStyleNameProduct>
             {productDetails?.name}
           </WrapperStyleNameProduct>
-          <div>
+          <div style={{ fontSize:18}}>
+            Thương hiệu:
+            <WrapperMiniTitle>{productDetails?.brand}</WrapperMiniTitle>
+          </div>
+          <div style={{ fontSize:18}}>
+            Loại sản phẩm:
+            <WrapperMiniTitle onClick={() => handleNavigatetype(productDetails?.miniType)}>{productDetails?.miniType}</WrapperMiniTitle>
+          </div>
+          <div style={{paddingTop:5}}>
             <Rate
               allowHalf
               defaultValue={productDetails?.rating}
@@ -250,14 +263,14 @@ const ProductDetailsComponent = ({ idProduct }) => {
               <ButtonComponent
                 size={40}
                 styleButton={{
-                  background: "rgb(255, 57, 69)",
+                  background: "#00adb5",
                   height: "48px",
                   width: "220px",
                   border: "none",
                   borderRadius: "4px",
                 }}
                 onClick={handleAddOrderProduct}
-                textbutton={"Chọn mua"}
+                textbutton={"Đặt hàng"}
                 styleTextButton={{
                   color: "#fff",
                   fontSize: "15px",
@@ -265,7 +278,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 }}
               ></ButtonComponent>
               {errorLimitOrder && (
-                <div style={{ color: "red" }}>San pham het hang</div>
+                <div style={{ fontSize: 18, fontWeight: "bold", color: "red" }}>
+                  Sản phẩm đã hết hàng
+                </div>
               )}
             </div>
           </div>
@@ -291,7 +306,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           <div>
             <h3
               style={{
-                color: "#df171f",
+                color: "#00adb5",
                 marginBottom: "24px",
                 fontWeight: "bolder",
               }}
@@ -370,14 +385,14 @@ const ProductDetailsComponent = ({ idProduct }) => {
           <div>
             <h4
               style={{
-                backgroundColor: "#df171f",
+                backgroundColor: "#00adb5",
                 color: "#fff",
                 marginBottom: "24px",
                 padding: "10px",
                 fontWeight: "bolder",
               }}
             >
-              3 Cam kết của Vivita
+              3 Cam kết của ECONUTRI
             </h4>
             <div
               style={{
@@ -396,7 +411,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   <p style={{ fontSize: "18px" }}>
                     <strong
                       style={{
-                        color: "#df171f",
+                        color: "#00adb5",
                         paddingLeft: "5px",
                       }}
                     >
@@ -411,7 +426,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   <p style={{ fontSize: "18px" }}>
                     <strong
                       style={{
-                        color: "#df171f",
+                        color: "#00adb5",
                         paddingLeft: "5px",
                       }}
                     >
@@ -426,7 +441,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   <p style={{ fontSize: "18px" }}>
                     <strong
                       style={{
-                        color: "#df171f",
+                        color: "#00adb5",
                         paddingLeft: "5px",
                       }}
                     >

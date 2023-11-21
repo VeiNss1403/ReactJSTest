@@ -90,7 +90,7 @@ export const WrapperDescriptionContent = styled.div`
 export const WrapperCommit = styled.span`
   padding: 2px 9px;
   height: max-content;
-  background-color: #df171f !important;
+  background-color: #00adb5 !important;
   border-radius: 50%;
   font-style: normal;
   font-weight: bolder;
@@ -98,4 +98,9 @@ export const WrapperCommit = styled.span`
   width: 28px;
   color: #fff;
   text-align: center;
+`;
+export const WrapperMiniTitle = styled.span`
+  padding: 5px;
+  color: #ffe19b;
+  cursor: pointer;
 `;

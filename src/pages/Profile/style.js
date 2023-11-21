@@ -22,13 +22,13 @@ export const WrapperLabel = styled.label`
     font-size: 12px;
     line-height: 30px;
     font-weight: 600;
-    width: 60px;
+    width: 100px;
     text-align: left;
 `
 
 export const WrapperInput = styled.div`
     display: flex;
-    align-items: cemter;
+    align-items: center;
     gap: 20px;
 `
 
