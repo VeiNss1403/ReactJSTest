@@ -2,9 +2,12 @@ import { Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { getItem } from "../../utils";
 import {
+  HomeOutlined,
   UserOutlined,
   AppstoreOutlined,
   ShoppingCartOutlined,
+  RollbackOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import HeaderComponent from "../../components/HeaderCompoent/HeaderComponent";
 import AdminUser from "../../components/AdminUser/AdminUser";
@@ -18,16 +21,21 @@ import CustomizedContent from "./components/CustomizedContent";
 import { useSelector } from "react-redux";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Loading from "../../components/LoadingComponent/Loading";
 
 const AdminPage = () => {
   const user = useSelector((state) => state.user);
-  const [keySelected, setKeySelected] = useState("");
+  const [keySelected, setKeySelected] = useState("trangchu");
+  const navigate = useNavigate();
 
   const items = [
+    getItem("Quay lại trang bán hàng", "/", <RollbackOutlined />),
+    getItem("Trang chủ", "trangchu", <HomeOutlined />),
     getItem("Người dùng", "users", <UserOutlined />),
     getItem("Sản phẩm", "products", <AppstoreOutlined />),
     getItem("Đơn hàng", "orders", <ShoppingCartOutlined />),
+    getItem("Doanh thu", "revenue", <DollarOutlined />),
   ];
 
   const getAllOrder = async () => {
@@ -53,11 +61,16 @@ const AdminPage = () => {
     ],
   });
   const memoCount = useMemo(() => {
-    const result = {};
+    const result = {
+      products: null,
+      users: null,
+      orders: null,
+    };
     try {
       if (queries) {
         queries.forEach((query) => {
-          result[query?.data?.key] = query?.data?.data?.length;
+          if (query?.data?.key)
+            result[query?.data?.key] = query?.data?.data?.length;
         });
       }
       return result;
@@ -72,6 +85,7 @@ const AdminPage = () => {
   };
 
   const renderPage = (key) => {
+    console.log("🚀 ~ file: AdminPage.jsx:77 ~ renderPage ~ key:", key);
     switch (key) {
       case "users":
         return <AdminUser />;
@@ -79,26 +93,20 @@ const AdminPage = () => {
         return <AdminProduct />;
       case "orders":
         return <OrderAdmin />;
-      default:
+      case "trangchu":
         return (
-          <>
-            <Loading
-              isLoading={
-                memoCount &&
-                Object.keys(memoCount) &&
-                Object.keys(memoCount).length !== 3
-              }
-            >
-              {!keySelected && (
-                <CustomizedContent
-                  data={memoCount}
-                  colors={COLORS}
-                  setKeySelected={setKeySelected}
-                />
-              )}
-            </Loading>
-          </>
+          <CustomizedContent
+            data={memoCount}
+            colors={COLORS}
+            setKeySelected={setKeySelected}
+          />
         );
+      case "/":
+        return navigate("/");
+      case "revenue":
+        return;
+      default:
+        return;
     }
   };
 

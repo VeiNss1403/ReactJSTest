@@ -8,7 +8,7 @@ import {
   WrapperRight,
   WrapperTotal,
 } from "./style";
-
+import { PayPalButton } from "react-paypal-button-v2";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { convertPrice } from "../../utils";
@@ -83,10 +83,19 @@ const PaymentPage = () => {
     return 0;
   }, [order]);
 
+  // const diliveryPriceMemo = useMemo(() => {
+  //   if (priceMemo > 200000) {
+  //     return 10000;
+  //   } else if (priceMemo === 0) {
+  //     return 0;
+  //   } else {
+  //     return 20000;
+  //   }
+  // }, [priceMemo]);
   const diliveryPriceMemo = useMemo(() => {
-    if (priceMemo > 200000) {
+    if (priceMemo >= 200000 && priceMemo < 500000) {
       return 10000;
-    } else if (priceMemo === 0) {
+    } else if (priceMemo >= 500000 || order?.orderItemsSlected?.length === 0) {
       return 0;
     } else {
       return 20000;
@@ -160,6 +169,7 @@ const PaymentPage = () => {
           delivery,
           payment,
           orders: order?.orderItemsSlected,
+          shippingPrice: order?.shippingPrice,
           totalPriceMemo: totalPriceMemo,
         },
       });
@@ -261,13 +271,13 @@ const PaymentPage = () => {
                     <Radio value="fast">
                       <span style={{ color: "#ea8500", fontWeight: "bold" }}>
                         FAST
-                      </span>{" "}
+                      </span>
                       Giao hàng tiết kiệm
                     </Radio>
                     <Radio value="gojek">
                       <span style={{ color: "#ea8500", fontWeight: "bold" }}>
                         GO_JEK
-                      </span>{" "}
+                      </span>
                       Giao hàng tiết kiệm
                     </Radio>
                   </WrapperRadio>
@@ -278,7 +288,6 @@ const PaymentPage = () => {
                   <Lable>Chọn phương thức thanh toán</Lable>
                   <WrapperRadio onChange={handlePayment} value={payment}>
                     <Radio value="later_money">
-                      {" "}
                       Thanh toán tiền mặt khi nhận hàng
                     </Radio>
                     <Radio value="paypal"> Thanh toán tiền bằng paypal</Radio>
@@ -378,14 +387,14 @@ const PaymentPage = () => {
               </div>
               {payment === "paypal" && sdkReady ? (
                 <div style={{ width: "320px" }}>
-                  {/* <PayPalButton
+                  <PayPalButton
                     amount={Math.round(totalPriceMemo / 30000)}
                     // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
                     onSuccess={onSuccessPaypal}
                     onError={() => {
-                      alert('Erroe')
+                      alert("Error");
                     }}
-                  /> */}
+                  />
                 </div>
               ) : (
                 <ButtonComponent

@@ -49,7 +49,14 @@ const DetailsOrderPage = () => {
 
   return (
     <Loading isLoading={isLoading}>
-      <div style={{ width: "100%", height: "auto",padding:10, background: "#f5f5fa" }}>
+      <div
+        style={{
+          width: "100%",
+          height: "auto",
+          padding: 10,
+          background: "#f5f5fa",
+        }}
+      >
         <div className="container">
           <h4>Chi tiết đơn hàng</h4>
           <WrapperHeaderUser>
@@ -75,9 +82,14 @@ const DetailsOrderPage = () => {
                   <span className="name-delivery">FAST </span>Giao hàng tiết
                   kiệm
                 </div>
-                <div className="delivery-fee">
-                  <span>Phí giao hàng: </span> {convertPrice(data?.shippingPrice)}
-                </div>
+                {data?.shippingPrice === 0 ? (
+                  <span> Miễn phí vận chuyển </span>
+                ) : (
+                  <div className="delivery-fee">
+                    <span>Phí giao hàng: </span>
+                    {convertPrice(data?.shippingPrice)}
+                  </div>
+                )}
               </WrapperContentInfo>
             </WrapperInfoUser>
             <WrapperInfoUser>
@@ -140,7 +152,9 @@ const DetailsOrderPage = () => {
                   <WrapperItem>{order?.amount}</WrapperItem>
                   <WrapperItem>
                     {order?.discount
-                      ? convertPrice((order?.price* order?.amount * order?.discount) / 100)
+                      ? convertPrice(
+                          (order?.price * order?.amount * order?.discount) / 100
+                        )
                       : "0 VND"}
                   </WrapperItem>
                 </WrapperProduct>
@@ -151,10 +165,14 @@ const DetailsOrderPage = () => {
               <WrapperItemLabel>Tạm tính</WrapperItemLabel>
               <WrapperItem>{convertPrice(priceMemo)}</WrapperItem>
             </WrapperAllPrice>
-            <WrapperAllPrice>
-              <WrapperItemLabel>Phí vận chuyển</WrapperItemLabel>
-              <WrapperItem>{convertPrice(data?.shippingPrice)}</WrapperItem>
-            </WrapperAllPrice>
+            {data?.shippingPrice !== 0 ? (
+              <WrapperAllPrice>
+                <WrapperItemLabel>Phí vận chuyển</WrapperItemLabel>
+                <WrapperItem>{convertPrice(data?.shippingPrice)}</WrapperItem>
+              </WrapperAllPrice>
+            ) : (
+              ""
+            )}
             <WrapperAllPrice>
               <WrapperItemLabel>Tổng cộng</WrapperItemLabel>
               <WrapperItem>

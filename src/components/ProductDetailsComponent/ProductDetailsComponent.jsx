@@ -42,7 +42,6 @@ const ProductDetailsComponent = ({ idProduct }) => {
   const onChange = (value) => {
     setNumProduct(Number(value));
   };
-
   const fetchGetDetailsProduct = async (context) => {
     const id = context?.queryKey && context?.queryKey[1];
     if (id) {
@@ -180,15 +179,19 @@ const ProductDetailsComponent = ({ idProduct }) => {
           <WrapperStyleNameProduct>
             {productDetails?.name}
           </WrapperStyleNameProduct>
-          <div style={{ fontSize:18}}>
+          <div style={{ fontSize: 18 }}>
             Thương hiệu:
             <WrapperMiniTitle>{productDetails?.brand}</WrapperMiniTitle>
           </div>
-          <div style={{ fontSize:18}}>
+          <div style={{ fontSize: 18 }}>
             Loại sản phẩm:
-            <WrapperMiniTitle onClick={() => handleNavigatetype(productDetails?.miniType)}>{productDetails?.miniType}</WrapperMiniTitle>
+            <WrapperMiniTitle
+              onClick={() => handleNavigatetype(productDetails?.miniType)}
+            >
+              {productDetails?.miniType}
+            </WrapperMiniTitle>
           </div>
-          <div style={{paddingTop:5}}>
+          <div style={{ paddingTop: 5 }}>
             <Rate
               allowHalf
               defaultValue={productDetails?.rating}
@@ -454,6 +457,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
             </div>
           </div>
         </Col>
+        <CommentComponent
+          dataHref="https://developers.facebook.com/docs/plugins/comments#configurator"
+          
+        />
       </Row>
     </Loading>
   );

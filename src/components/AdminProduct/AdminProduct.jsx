@@ -306,7 +306,7 @@ const AdminProduct = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       fixed: "left",
-      width: "31%",
+      width: "300px",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
@@ -638,7 +638,9 @@ const AdminProduct = () => {
           columns={columns}
           isLoading={isLoadingProducts}
           data={dataTable}
-          pagination={{ pageSize: 3 }}
+          scroll={{
+            y: 400,
+          }}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
@@ -1115,14 +1117,14 @@ const AdminProduct = () => {
                   <img
                     src={stateProductDetails?.image}
                     style={{
-                          height: "102px",
-                          width: "102px",
-                          borderRadius: "8px",
-                          padding: "8px",
-                          border:'1px solid #d9d9d9',
-                          objectFit: "cover",
-                          cursor:'default'
-                        }}
+                      height: "102px",
+                      width: "102px",
+                      borderRadius: "8px",
+                      padding: "8px",
+                      border: "1px solid #d9d9d9",
+                      objectFit: "cover",
+                      cursor: "default",
+                    }}
                     alt="avatar"
                   />
                 )}
@@ -1147,7 +1149,11 @@ const AdminProduct = () => {
                   {stateProductDetails?.miniImages?.map((image, index) => (
                     <div
                       key={index}
-                      style={{display: "flex", alignItems: "center", marginLeft:'5px'}}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginLeft: "5px",
+                      }}
                     >
                       <img
                         src={image}
@@ -1156,9 +1162,9 @@ const AdminProduct = () => {
                           width: "102px",
                           borderRadius: "8px",
                           padding: "8px",
-                          border:'1px solid #d9d9d9',
+                          border: "1px solid #d9d9d9",
                           objectFit: "cover",
-                          cursor:'default'
+                          cursor: "default",
                         }}
                         alt={`avatar_${index}`}
                       />
