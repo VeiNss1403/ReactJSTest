@@ -1,5 +1,5 @@
 # Getting Started with Create React App
-
+linkprojectdeploy: https://react-js-test-1ya95xodv-hoanglocs-projects.vercel.app/
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
