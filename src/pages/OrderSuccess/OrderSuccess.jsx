@@ -87,7 +87,7 @@ const OrderSucess = () => {
               <div>
                 <div style={{ fontSize: "16px", color: "red" }}>
                   Phí vận chuyển:{" "}
-                  {state?.shippingPrice === 0 ? (
+                  {state?.shippingPrice !== 0 ? (
                     convertPrice(state?.shippingPrice)
                   ) : (
                     <span> Miễn phí vận chuyển</span>

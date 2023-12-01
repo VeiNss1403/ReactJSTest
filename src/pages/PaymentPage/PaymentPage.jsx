@@ -8,7 +8,6 @@ import {
   WrapperRight,
   WrapperTotal,
 } from "./style";
-import { PayPalButton } from "react-paypal-button-v2";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { convertPrice } from "../../utils";
@@ -25,9 +24,16 @@ import { useNavigate } from "react-router-dom";
 import { removeAllOrderProduct } from "../../redux/slides/orderSlide";
 //import { PayPalButton } from "react-paypal-button-v2";
 import * as PaymentService from "../../services/PaymentService";
+import {
+  PayPalButtons,
+  PayPalScriptProvider,
+  usePayPalScriptReducer,
+} from "@paypal/react-paypal-js";
+import PaypalComponent from "../../components/PaypalComponent/PaypalComponent";
 
 const PaymentPage = () => {
   const order = useSelector((state) => state?.order);
+  console.log("🚀 ~ file: PaymentPage.jsx:31 ~ PaymentPage ~ order:", order);
   const user = useSelector((state) => state?.user);
 
   const [delivery, setDelivery] = useState("fast");
@@ -95,7 +101,7 @@ const PaymentPage = () => {
   const diliveryPriceMemo = useMemo(() => {
     if (priceMemo >= 200000 && priceMemo < 500000) {
       return 10000;
-    } else if (priceMemo >= 500000 || order?.orderItemsSlected?.length === 0) {
+    } else if (priceMemo >= 500000 ) {
       return 0;
     } else {
       return 20000;
@@ -107,7 +113,7 @@ const PaymentPage = () => {
       Number(priceMemo) - Number(priceDiscountMemo) + Number(diliveryPriceMemo)
     );
   }, [priceMemo, priceDiscountMemo, diliveryPriceMemo]);
-
+  const pricePaypal = Number((totalPriceMemo / 23500).toFixed(2));
   const handleAddOrder = () => {
     if (
       user?.access_token &&
@@ -169,7 +175,7 @@ const PaymentPage = () => {
           delivery,
           payment,
           orders: order?.orderItemsSlected,
-          shippingPrice: order?.shippingPrice,
+          shippingPrice: diliveryPriceMemo,
           totalPriceMemo: totalPriceMemo,
         },
       });
@@ -177,6 +183,10 @@ const PaymentPage = () => {
       message.error();
     }
   }, [isSuccess, isError]);
+  console.log(
+    "🚀 ~ file: PaymentPage.jsx:179 ~ useEffect ~ order?.shippingPrice:",
+    order?.shippingPrice
+  );
 
   const handleCancleUpdate = () => {
     setStateUserDetails({
@@ -236,26 +246,43 @@ const PaymentPage = () => {
   const handlePayment = (e) => {
     setPayment(e.target.value);
   };
+  const style = { layout: "vertical" };
 
-  const addPaypalScript = async () => {
-    const { data } = await PaymentService.getConfig();
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-    script.async = true;
-    script.onload = () => {
-      setSdkReady(true);
-    };
-    document.body.appendChild(script);
+  // Custom component to wrap the PayPalButtons and show loading spinner
+  const ButtonWrapper = ({ showSpinner, currency, amount }) => {
+    const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
+    useEffect(() => {
+      dispatch({
+        type: "resetOptions",
+        value: {
+          ...options,
+          currency: currency,
+        },
+      });
+    }, [currency, showSpinner]);
+
+    return (
+      <>
+        {showSpinner && isPending && <div className="spinner" />}
+        <PayPalButtons
+          style={style}
+          disabled={false}
+          forceReRender={[style, currency, amount]}
+          fundingSource={undefined}
+          createOrder={(data, actions) =>
+            actions.order
+              .create({
+                purchase_units: [
+                  { amount: { currency_code: currency, value: amount } },
+                ],
+              })
+              .then((orderId) => orderId)
+          }
+          onApprove={onSuccessPaypal}
+        />
+      </>
+    );
   };
-
-  useEffect(() => {
-    if (!window.paypal) {
-      addPaypalScript();
-    } else {
-      setSdkReady(true);
-    }
-  }, []);
 
   return (
     <div style={{ background: "#f5f5fa", with: "100%", height: "100vh" }}>
@@ -385,16 +412,21 @@ const PaymentPage = () => {
                   </span>
                 </WrapperTotal>
               </div>
-              {payment === "paypal" && sdkReady ? (
+              {payment === "paypal" ? (
                 <div style={{ width: "320px" }}>
-                  <PayPalButton
-                    amount={Math.round(totalPriceMemo / 30000)}
-                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                    onSuccess={onSuccessPaypal}
-                    onError={() => {
-                      alert("Error");
+                  <PayPalScriptProvider
+                    options={{
+                      clientId: "test",
+                      components: "buttons",
+                      currency: "USD",
                     }}
-                  />
+                  >
+                    <ButtonWrapper
+                      currency={"USD"}
+                      amount={pricePaypal}
+                      showSpinner={false}
+                    />
+                  </PayPalScriptProvider>
                 </div>
               ) : (
                 <ButtonComponent
