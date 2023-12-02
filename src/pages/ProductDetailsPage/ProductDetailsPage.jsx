@@ -4,7 +4,6 @@ import ProductDetailsComponent from "../../components/ProductDetailsComponent/Pr
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   return (
     <div style={{ width: "100%", background: "#efefef", height: "100%" }}>
       <div style={{ width: "1270px", height: "100%", margin: "0 auto" }}>

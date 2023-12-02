@@ -452,7 +452,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         </Col>
         <CommentComponent
           dataHref={
-            process.env.REACT_APP_IS_LOCAL==='false'
+            process.env.REACT_APP_IS_LOCAL==='true'
               ? "https://developers.facebook.com/docs/plugins/comments#configurator"
               : window.location.href
           }
