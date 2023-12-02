@@ -29,6 +29,7 @@ import { useEffect } from "react";
 import * as message from "../Message/Message";
 import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
 import CommentComponent from "../CommentComponent/CommentComponent";
+import { type } from "@testing-library/user-event/dist/type";
 
 const ProductDetailsComponent = ({ idProduct }) => {
   const [numProduct, setNumProduct] = useState(1);
@@ -211,7 +212,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           </WrapperAddressProduct>
           <LikeButtonComponent
             dataHref={
-              process.env.REACT_APP_IS_LOCAL
+              process.env.REACT_APP_IS_LOCAL === "true"
                 ? "https://developers.facebook.com/docs/plugins/"
                 : window.location.href
             }
@@ -451,7 +452,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         </Col>
         <CommentComponent
           dataHref={
-            process.env.REACT_APP_IS_LOCAL
+            process.env.REACT_APP_IS_LOCAL==='false'
               ? "https://developers.facebook.com/docs/plugins/comments#configurator"
               : window.location.href
           }

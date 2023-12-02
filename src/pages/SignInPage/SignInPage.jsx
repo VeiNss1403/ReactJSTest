@@ -6,7 +6,7 @@ import {
   WrapperContainerRight,
   WrapperTextLight,
 } from "./style";
-import imageLogo from "../../Assets/Images/logo/logoVivita.png";
+import imageLogo from "../../Assets/Images/logo/logo.png";
 import { Image } from "antd";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
 import { useState } from "react";
@@ -17,6 +17,9 @@ import Loading from "../../components/LoadingComponent/Loading";
 import jwt_decode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../redux/slides/userSlide";
+import { FacebookLoginButton } from "react-social-login-buttons";
+import { LoginSocialFacebook } from "reactjs-social-login";
+import * as message from "../../components/Message/Message";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -25,11 +28,28 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
+  const mutationSignUp = useMutationHooks((data) =>
+    UserService.signupUser(data)
+  );
   const navigate = useNavigate();
 
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
   const { data, isLoading, isSuccess } = mutation;
+  const { data: dataSignUp, isSuccess: isSuccessSignUp } = mutationSignUp;
+
+  useEffect(() => {
+    if (isSuccessSignUp && dataSignUp?.status === "OK") {
+      setEmail(dataSignUp?.variables?.email);
+      setPassword(dataSignUp?.variables?.password);
+      mutation.mutate({
+        email,
+        password,
+      });
+      message.success("Đăng nhập thành công");
+    } else if (isSuccessSignUp && dataSignUp?.status === "ERR") {
+      message.error("Đăng nhập thất bại");
+    }
+  }, [isSuccessSignUp]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -43,6 +63,7 @@ const SignInPage = () => {
         "refresh_token",
         JSON.stringify(data?.refresh_token)
       );
+      message.success("Đăng nhập thành công");
       if (data?.access_token) {
         const decoded = jwt_decode(data?.access_token);
         if (decoded?.id) {
@@ -77,7 +98,9 @@ const SignInPage = () => {
       password,
     });
   };
-
+  const handleSignUp = (email, password, confirmPassword) => {
+    mutationSignUp.mutate({ email, password, confirmPassword });
+  };
   return (
     <div
       style={{
@@ -148,6 +171,25 @@ const SignInPage = () => {
                 fontWeight: "700",
               }}
             ></ButtonComponent>
+            <LoginSocialFacebook
+              appId="883808830080506"
+              onResolve={(response) => {
+                handleSignUp(
+                  response?.data?.email,
+                  response?.data?.email,
+                  response?.data?.email
+                );
+              }}
+            >
+              <FacebookLoginButton
+                align="center"
+                text="Facebook"
+                style={{
+                  margin: "5px 0px",
+                  width: "200px",
+                }}
+              />
+            </LoginSocialFacebook>
           </Loading>
           <p>
             <WrapperTextLight>Quên mật khẩu?</WrapperTextLight>
@@ -167,7 +209,7 @@ const SignInPage = () => {
             height="auto"
             width="235px"
           />
-          <h3>Mua sắm tại Vivita</h3>
+          <h4 style={{ fontWeight: "bold" }}>Mua sắm tại ECONUTRI</h4>
         </WrapperContainerRight>
       </div>
     </div>

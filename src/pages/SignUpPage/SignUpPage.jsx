@@ -1,130 +1,173 @@
-import React from 'react'
-import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
-import InputForm from '../../components/InputForm/InputForm'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
-import imageLogo from '../../Assets/Images/logo/logoVivita.png'
-import { Image } from 'antd'
-import { useState } from 'react'
-import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
-import * as UserService from '../../services/UserService'
-import { useMutationHooks } from '../../hooks/useMutationHook'
-import Loading from '../../components/LoadingComponent/Loading'
-import * as message from '../../components/Message/Message'
-import { useEffect } from 'react'
+import React from "react";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
+import InputForm from "../../components/InputForm/InputForm";
+import {
+  WrapperContainerLeft,
+  WrapperContainerRight,
+  WrapperTextLight,
+} from "./style";
+import imageLogo from "../../Assets/Images/logo/logo.png";
+import { Image } from "antd";
+import { useState } from "react";
+import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import * as UserService from "../../services/UserService";
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import Loading from "../../components/LoadingComponent/Loading";
+import * as message from "../../components/Message/Message";
+import { useEffect } from "react";
 
 const SignUpPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [isShowPassword, setIsShowPassword] = useState(false)
-  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false)
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  const mutation = useMutationHooks(
-    data => UserService.signupUser(data)
-  )
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { isSuccess, isError } = mutation
+  const mutation = useMutationHooks((data) => UserService.signupUser(data));
+
+  const { isSuccess, isError } = mutation;
 
   useEffect(() => {
     if (isSuccess) {
-      message.success()
-      handleNavigateSignIn()
+      message.success();
+      handleNavigateSignIn();
     } else if (isError) {
-      message.error()
+      message.error();
     }
-  }, [isSuccess, isError])
+  }, [isSuccess, isError]);
 
   const handleOnchangeInput = (field, value) => {
-    if (field === 'email') setEmail(value);
-    if (field === 'password') setPassword(value);
-    if (field === 'confirmPassword') setConfirmPassword(value);
+    if (field === "email") setEmail(value);
+    if (field === "password") setPassword(value);
+    if (field === "confirmPassword") setConfirmPassword(value);
   };
 
   const handleNavigateSignIn = () => {
-    navigate('/sign-in')
-  }
+    navigate("/sign-in");
+  };
 
   const handleSignUp = () => {
-    mutation.mutate({ email, password, confirmPassword })
-  }
+    mutation.mutate({ email, password, confirmPassword });
+  };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0, 0, 0, 0.53)', height: '100vh' }}>
-      <div style={{ width: '800px', height: '445px', borderRadius: '6px', background: '#fff', display: 'flex' }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0, 0, 0, 0.53)",
+        height: "100vh",
+      }}
+    >
+      <div
+        style={{
+          width: "800px",
+          height: "445px",
+          borderRadius: "6px",
+          background: "#fff",
+          display: "flex",
+        }}
+      >
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
           <p>Đăng nhập vào tạo tài khoản</p>
-          <InputForm style={{ marginBottom: '10px' }} placeholder="abc@gmail.com" value={email} onChange={(value)=>handleOnchangeInput('email',value)} />
-          <div style={{ position: 'relative' }}>
+          <InputForm
+            style={{ marginBottom: "10px" }}
+            placeholder="abc@gmail.com"
+            value={email}
+            onChange={(value) => handleOnchangeInput("email", value)}
+          />
+          <div style={{ position: "relative" }}>
             <span
               onClick={() => setIsShowPassword(!isShowPassword)}
               style={{
                 zIndex: 10,
-                position: 'absolute',
-                top: '4px',
-                right: '8px'
+                position: "absolute",
+                top: "4px",
+                right: "8px",
               }}
-            >{
-                isShowPassword ? (
-                  <EyeFilled />
-                ) : (
-                  <EyeInvisibleFilled />
-                )
-              }
+            >
+              {isShowPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
             </span>
-            <InputForm placeholder="password" style={{ marginBottom: '10px' }} type={isShowPassword ? "text" : "password"}
-              value={password} onChange={(value)=>handleOnchangeInput('password',value)} />
+            <InputForm
+              placeholder="password"
+              style={{ marginBottom: "10px" }}
+              type={isShowPassword ? "text" : "password"}
+              value={password}
+              onChange={(value) => handleOnchangeInput("password", value)}
+            />
           </div>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: "relative" }}>
             <span
               onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
               style={{
                 zIndex: 10,
-                position: 'absolute',
-                top: '4px',
-                right: '8px'
+                position: "absolute",
+                top: "4px",
+                right: "8px",
               }}
-            >{
-                isShowConfirmPassword ? (
-                  <EyeFilled />
-                ) : (
-                  <EyeInvisibleFilled />
-                )
-              }
+            >
+              {isShowConfirmPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
             </span>
-            <InputForm placeholder="comfirm password" type={isShowConfirmPassword ? "text" : "password"}
-              value={confirmPassword} onChange={(value=>handleOnchangeInput('confirmPassword',value))} /> 
+            <InputForm
+              placeholder="comfirm password"
+              type={isShowConfirmPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(value) =>
+                handleOnchangeInput("confirmPassword", value)
+              }
+            />
           </div>
-          {isError && <span style={{ color: 'red' }}>{mutation.error.message}</span>}
+          {isError && (
+            <span style={{ color: "red" }}>{mutation.error.message}</span>
+          )}
           <Loading isLoading={mutation.isLoading}>
             <ButtonComponent
-              disabled={!email.length || !password.length || !confirmPassword.length}
+              disabled={
+                !email.length || !password.length || !confirmPassword.length
+              }
               onClick={handleSignUp}
               size={40}
               styleButton={{
-                background: 'rgb(255, 57, 69)',
-                height: '48px',
-                width: '100%',
-                border: 'none',
-                borderRadius: '4px',
-                margin: '26px 0 10px'
+                background: "rgb(255, 57, 69)",
+                height: "48px",
+                width: "100%",
+                border: "none",
+                borderRadius: "4px",
+                margin: "26px 0 10px",
               }}
-              textbutton={'Đăng ký'}
-              styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
+              textbutton={"Đăng ký"}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
             ></ButtonComponent>
           </Loading>
-          <p>Bạn đã có tài khoản? <WrapperTextLight onClick={handleNavigateSignIn}> Đăng nhập</WrapperTextLight></p>
+          <p>
+            Bạn đã có tài khoản?
+            <WrapperTextLight onClick={handleNavigateSignIn}>
+              Đăng nhập
+            </WrapperTextLight>
+          </p>
         </WrapperContainerLeft>
         <WrapperContainerRight>
-          <Image src={imageLogo} preview={false} alt="iamge-logo" height="auto" width="235px" />
-          <h3>Mua sắm tại Vivita</h3>
+          <Image
+            src={imageLogo}
+            preview={false}
+            alt="iamge-logo"
+            height="auto"
+            width="235px"
+          />
+          <h4 style={{ fontWeight: "bold" }}>Mua sắm tại ECONUTRI</h4>
         </WrapperContainerRight>
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default SignUpPage
+export default SignUpPage;

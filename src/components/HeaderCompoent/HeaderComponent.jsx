@@ -1,4 +1,4 @@
-import { Badge, Image, Col, Popover } from "antd";
+import { Badge, Image, Col, Popover} from "antd";
 import React from "react";
 import {
   WrapperContentPopup,
@@ -24,6 +24,7 @@ import Loading from "../LoadingComponent/Loading";
 import { useEffect } from "react";
 import { searchProduct } from "../../redux/slides/productSlide";
 import logoImage from "../../Assets/Images/logo/logo.png";
+import * as message from "../../components/Message/Message";
 
 const HeaderComponent = ({
   isHiddenSearch = false,
@@ -48,6 +49,7 @@ const HeaderComponent = ({
     await UserService.logoutUser();
     dispatch(resetUser());
     setLoading(false);
+    message.success('Đăng xuất thành công!')
   };
 
   useEffect(() => {
