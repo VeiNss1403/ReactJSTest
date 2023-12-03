@@ -146,7 +146,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
     );
   };
   return (
-    <>
+    <Loading isLoading={isLoading}>
       <Helmet>
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="website" />
@@ -154,328 +154,318 @@ const ProductDetailsComponent = ({ idProduct }) => {
         <meta property="og:description" content={productDetails?.description} />
         <meta property="og:image" content={productDetails?.image} />
       </Helmet>
-      <Loading isLoading={isLoading}>
-        <Row
-          style={{
-            padding: "16px",
-            background: "#fff",
-            borderRadius: "4px",
-            height: "100%",
-          }}
+      <Row
+        style={{
+          padding: "16px",
+          background: "#fff",
+          borderRadius: "4px",
+          height: "100%",
+        }}
+      >
+        <Col
+          span={10}
+          style={{ borderRight: "1px solid #e5e5e5", paddingRight: "8px" }}
         >
-          <Col
-            span={10}
-            style={{ borderRight: "1px solid #e5e5e5", paddingRight: "8px" }}
-          >
-            <Image
-              src={productDetails?.image}
-              alt="image prodcut"
-              preview={false}
-            />
-            <Row
-              style={{ paddingTop: "10px", justifyContent: "space-between" }}
-            >
-              {productDetails?.miniImages?.map((image) => (
-                <WrapperStyleColImage span={4}>
-                  <WrapperStyleImageSmall
-                    src={image}
-                    alt="image small"
-                    preview={false}
-                  />
-                </WrapperStyleColImage>
-              ))}
-            </Row>
-          </Col>
-          <Col span={14} style={{ paddingLeft: "10px" }}>
-            <WrapperStyleNameProduct>
-              {productDetails?.name}
-            </WrapperStyleNameProduct>
-            <div style={{ fontSize: 18 }}>
-              Thương hiệu:
-              <WrapperMiniTitle>{productDetails?.brand}</WrapperMiniTitle>
-            </div>
-            <div style={{ fontSize: 18 }}>
-              Loại sản phẩm:
-              <WrapperMiniTitle
-                onClick={() => handleNavigatetype(productDetails?.miniType)}
-              >
-                {productDetails?.miniType}
-              </WrapperMiniTitle>
-            </div>
-            <div style={{ paddingTop: 5 }}>
-              <Rate
-                allowHalf
-                defaultValue={productDetails?.rating}
-                value={productDetails?.rating}
-              />
-              <WrapperStyleTextSell> | Đã bán 0+</WrapperStyleTextSell>
-            </div>
-            <WrapperPriceProduct>
-              <WrapperPriceTextProduct>
-                {convertPrice(productDetails?.price)}
-              </WrapperPriceTextProduct>
-            </WrapperPriceProduct>
-            <WrapperAddressProduct>
-              <span>Giao đến </span>
-              <span className="address">{user?.address}</span> -
-              <span className="change-address">Đổi địa chỉ</span>
-            </WrapperAddressProduct>
-            <LikeButtonComponent
-              dataHref={
-                process.env.REACT_APP_IS_LOCAL === "true"
-                  ? "https://developers.facebook.com/docs/plugins/"
-                  : window.location.href
-              }
-            />
-            <div
-              style={{
-                margin: "10px 0 20px",
-                padding: "10px 0",
-                borderTop: "1px solid #e5e5e5",
-                borderBottom: "1px solid #e5e5e5",
-              }}
-            >
-              <div style={{ marginBottom: "10px" }}>Số lượng</div>
-              <WrapperQualityProduct>
-                <button
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                  }}
-                  onClick={() =>
-                    handleChangeCount("decrease", numProduct === 1)
-                  }
-                >
-                  <MinusOutlined style={{ color: "#000", fontSize: "20px" }} />
-                </button>
-                <WrapperInputNumber
-                  onChange={onChange}
-                  defaultValue={1}
-                  max={productDetails?.countInStock}
-                  min={1}
-                  value={numProduct}
-                  size="small"
+          <Image
+            src={productDetails?.image}
+            alt="image prodcut"
+            preview={false}
+          />
+          <Row style={{ paddingTop: "10px", justifyContent: "space-between" }}>
+            {productDetails?.miniImages?.map((image) => (
+              <WrapperStyleColImage span={4}>
+                <WrapperStyleImageSmall
+                  src={image}
+                  alt="image small"
+                  preview={false}
                 />
-                <button
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                  }}
-                  onClick={() =>
-                    handleChangeCount(
-                      "increase",
-                      numProduct === productDetails?.countInStock
-                    )
-                  }
-                >
-                  <PlusOutlined style={{ color: "#000", fontSize: "20px" }} />
-                </button>
-              </WrapperQualityProduct>
-            </div>
-            <div style={{ display: "flex", aliggItems: "center", gap: "12px" }}>
-              <div>
-                <ButtonComponent
-                  size={40}
-                  styleButton={{
-                    background: "#00adb5",
-                    height: "48px",
-                    width: "220px",
-                    border: "none",
-                    borderRadius: "4px",
-                  }}
-                  onClick={handleAddOrderProduct}
-                  textbutton={"Đặt hàng"}
-                  styleTextButton={{
-                    color: "#fff",
-                    fontSize: "15px",
-                    fontWeight: "700",
-                  }}
-                ></ButtonComponent>
-                {errorLimitOrder && (
-                  <div
-                    style={{ fontSize: 18, fontWeight: "bold", color: "red" }}
-                  >
-                    Sản phẩm đã hết hàng
-                  </div>
-                )}
-              </div>
-            </div>
-          </Col>
-        </Row>
-        <Row
-          style={{
-            padding: "16px",
-            background: "#fff",
-            borderRadius: "4px",
-            height: "100%",
-          }}
-        >
-          <Col span={16} style={{ paddingRight: "8px" }}>
-            <div>
-              <h3
-                style={{
-                  color: "#00adb5",
-                  marginBottom: "24px",
-                  fontWeight: "bolder",
-                }}
-              >
-                THÔNG TIN SẢN PHẨM
-              </h3>
-              <div style={{ marginBottom: "24px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    borderBottom: "1px solid #ccc",
-                    alignItems: "center",
-                  }}
-                >
-                  <WrapperDescriptionTitle>
-                    Tên sản phẩm
-                  </WrapperDescriptionTitle>
-                  <WrapperDescriptionContent>
-                    {productDetails?.name}
-                  </WrapperDescriptionContent>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    borderBottom: "1px solid #ccc",
-                    alignItems: "center",
-                  }}
-                >
-                  <WrapperDescriptionTitle>Thành phần</WrapperDescriptionTitle>
-                  <WrapperDescriptionContent>
-                    {productDetails?.ingredient}
-                  </WrapperDescriptionContent>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    borderBottom: "1px solid #ccc",
-                    alignItems: "center",
-                  }}
-                >
-                  <WrapperDescriptionTitle>
-                    Quốc giá sản xuất
-                  </WrapperDescriptionTitle>
-                  <WrapperDescriptionContent>
-                    {productDetails?.country}
-                  </WrapperDescriptionContent>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    borderBottom: "1px solid #ccc",
-                    alignItems: "center",
-                  }}
-                >
-                  <WrapperDescriptionTitle>Thương hiệu</WrapperDescriptionTitle>
-                  <WrapperDescriptionContent>
-                    {productDetails?.brand}
-                  </WrapperDescriptionContent>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    borderBottom: "1px solid #ccc",
-                    alignItems: "center",
-                  }}
-                >
-                  <WrapperDescriptionTitle>
-                    Mô tả sản phẩm
-                  </WrapperDescriptionTitle>
-                  <WrapperDescriptionContent>
-                    {productDetails?.description}
-                  </WrapperDescriptionContent>
-                </div>
-              </div>
-            </div>
-          </Col>
-          <Col span={8}>
-            <div>
-              <h4
-                style={{
-                  backgroundColor: "#00adb5",
-                  color: "#fff",
-
-                  padding: "15px",
-                  fontWeight: "bolder",
-                }}
-              >
-                3 Cam kết của ECONUTRI
-              </h4>
-              <div
-                style={{
-                  marginBottom: "30px",
-                  backgroundColor: "#FAFAFA",
-                }}
-              >
-                <ul
-                  style={{
-                    padding: 20,
-                  }}
-                >
-                  <li style={{ display: "flex" }}>
-                    <WrapperCommit>1</WrapperCommit>
-                    <p style={{ fontSize: "18px" }}>
-                      <strong
-                        style={{
-                          color: "#00adb5",
-                          paddingLeft: "5px",
-                        }}
-                      >
-                        Cam kết bán hàng mới
-                      </strong>
-                      - Vivita chỉ bán các sản phẩm còn mới, hạn sử dụng còn xa,
-                      đảm bảo chất lượng. Nói không với hàng hết date, cận date.
-                    </p>
-                  </li>
-                  <li style={{ display: "flex" }}>
-                    <WrapperCommit>2</WrapperCommit>
-                    <p style={{ fontSize: "18px" }}>
-                      <strong
-                        style={{
-                          color: "#00adb5",
-                          paddingLeft: "5px",
-                        }}
-                      >
-                        Cam kết tư vấn đúng
-                      </strong>
-                      - Chuyên nghiệp và chân thành tư vấn từ tâm, tư vấn đúng
-                      vấn đề, đúng hàng, đúng cách dùng.
-                    </p>
-                  </li>
-                  <li style={{ display: "flex" }}>
-                    <WrapperCommit>3</WrapperCommit>
-                    <p style={{ fontSize: "18px" }}>
-                      <strong
-                        style={{
-                          color: "#00adb5",
-                          paddingLeft: "5px",
-                        }}
-                      >
-                        Cam kết chính hãng
-                      </strong>
-                      - Hoàn tiền 200% nếu phát hiện hàng không chính hãng.
-                    </p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </Col>
-          <CommentComponent
+              </WrapperStyleColImage>
+            ))}
+          </Row>
+        </Col>
+        <Col span={14} style={{ paddingLeft: "10px" }}>
+          <WrapperStyleNameProduct>
+            {productDetails?.name}
+          </WrapperStyleNameProduct>
+          <div style={{ fontSize: 18 }}>
+            Thương hiệu:
+            <WrapperMiniTitle>{productDetails?.brand}</WrapperMiniTitle>
+          </div>
+          <div style={{ fontSize: 18 }}>
+            Loại sản phẩm:
+            <WrapperMiniTitle
+              onClick={() => handleNavigatetype(productDetails?.miniType)}
+            >
+              {productDetails?.miniType}
+            </WrapperMiniTitle>
+          </div>
+          <div style={{ paddingTop: 5 }}>
+            <Rate
+              allowHalf
+              defaultValue={productDetails?.rating}
+              value={productDetails?.rating}
+            />
+            <WrapperStyleTextSell> | Đã bán 0+</WrapperStyleTextSell>
+          </div>
+          <WrapperPriceProduct>
+            <WrapperPriceTextProduct>
+              {convertPrice(productDetails?.price)}
+            </WrapperPriceTextProduct>
+          </WrapperPriceProduct>
+          <WrapperAddressProduct>
+            <span>Giao đến </span>
+            <span className="address">{user?.address}</span> -
+            <span className="change-address">Đổi địa chỉ</span>
+          </WrapperAddressProduct>
+          <LikeButtonComponent
             dataHref={
               process.env.REACT_APP_IS_LOCAL === "true"
-                ? "https://developers.facebook.com/docs/plugins/comments#configurator"
+                ? "https://developers.facebook.com/docs/plugins/"
                 : window.location.href
             }
-            width="1250"
           />
-        </Row>
-      </Loading>
-    </>
+          <div
+            style={{
+              margin: "10px 0 20px",
+              padding: "10px 0",
+              borderTop: "1px solid #e5e5e5",
+              borderBottom: "1px solid #e5e5e5",
+            }}
+          >
+            <div style={{ marginBottom: "10px" }}>Số lượng</div>
+            <WrapperQualityProduct>
+              <button
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleChangeCount("decrease", numProduct === 1)}
+              >
+                <MinusOutlined style={{ color: "#000", fontSize: "20px" }} />
+              </button>
+              <WrapperInputNumber
+                onChange={onChange}
+                defaultValue={1}
+                max={productDetails?.countInStock}
+                min={1}
+                value={numProduct}
+                size="small"
+              />
+              <button
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}
+                onClick={() =>
+                  handleChangeCount(
+                    "increase",
+                    numProduct === productDetails?.countInStock
+                  )
+                }
+              >
+                <PlusOutlined style={{ color: "#000", fontSize: "20px" }} />
+              </button>
+            </WrapperQualityProduct>
+          </div>
+          <div style={{ display: "flex", aliggItems: "center", gap: "12px" }}>
+            <div>
+              <ButtonComponent
+                size={40}
+                styleButton={{
+                  background: "#00adb5",
+                  height: "48px",
+                  width: "220px",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+                onClick={handleAddOrderProduct}
+                textbutton={"Đặt hàng"}
+                styleTextButton={{
+                  color: "#fff",
+                  fontSize: "15px",
+                  fontWeight: "700",
+                }}
+              ></ButtonComponent>
+              {errorLimitOrder && (
+                <div style={{ fontSize: 18, fontWeight: "bold", color: "red" }}>
+                  Sản phẩm đã hết hàng
+                </div>
+              )}
+            </div>
+          </div>
+        </Col>
+      </Row>
+      <Row
+        style={{
+          padding: "16px",
+          background: "#fff",
+          borderRadius: "4px",
+          height: "100%",
+        }}
+      >
+        <Col span={16} style={{ paddingRight: "8px" }}>
+          <div>
+            <h3
+              style={{
+                color: "#00adb5",
+                marginBottom: "24px",
+                fontWeight: "bolder",
+              }}
+            >
+              THÔNG TIN SẢN PHẨM
+            </h3>
+            <div style={{ marginBottom: "24px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "1px solid #ccc",
+                  alignItems: "center",
+                }}
+              >
+                <WrapperDescriptionTitle>Tên sản phẩm</WrapperDescriptionTitle>
+                <WrapperDescriptionContent>
+                  {productDetails?.name}
+                </WrapperDescriptionContent>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "1px solid #ccc",
+                  alignItems: "center",
+                }}
+              >
+                <WrapperDescriptionTitle>Thành phần</WrapperDescriptionTitle>
+                <WrapperDescriptionContent>
+                  {productDetails?.ingredient}
+                </WrapperDescriptionContent>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "1px solid #ccc",
+                  alignItems: "center",
+                }}
+              >
+                <WrapperDescriptionTitle>
+                  Quốc giá sản xuất
+                </WrapperDescriptionTitle>
+                <WrapperDescriptionContent>
+                  {productDetails?.country}
+                </WrapperDescriptionContent>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "1px solid #ccc",
+                  alignItems: "center",
+                }}
+              >
+                <WrapperDescriptionTitle>Thương hiệu</WrapperDescriptionTitle>
+                <WrapperDescriptionContent>
+                  {productDetails?.brand}
+                </WrapperDescriptionContent>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "1px solid #ccc",
+                  alignItems: "center",
+                }}
+              >
+                <WrapperDescriptionTitle>
+                  Mô tả sản phẩm
+                </WrapperDescriptionTitle>
+                <WrapperDescriptionContent>
+                  {productDetails?.description}
+                </WrapperDescriptionContent>
+              </div>
+            </div>
+          </div>
+        </Col>
+        <Col span={8}>
+          <div>
+            <h4
+              style={{
+                backgroundColor: "#00adb5",
+                color: "#fff",
+
+                padding: "15px",
+                fontWeight: "bolder",
+              }}
+            >
+              3 Cam kết của ECONUTRI
+            </h4>
+            <div
+              style={{
+                marginBottom: "30px",
+                backgroundColor: "#FAFAFA",
+              }}
+            >
+              <ul
+                style={{
+                  padding: 20,
+                }}
+              >
+                <li style={{ display: "flex" }}>
+                  <WrapperCommit>1</WrapperCommit>
+                  <p style={{ fontSize: "18px" }}>
+                    <strong
+                      style={{
+                        color: "#00adb5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      Cam kết bán hàng mới
+                    </strong>
+                    - Vivita chỉ bán các sản phẩm còn mới, hạn sử dụng còn xa,
+                    đảm bảo chất lượng. Nói không với hàng hết date, cận date.
+                  </p>
+                </li>
+                <li style={{ display: "flex" }}>
+                  <WrapperCommit>2</WrapperCommit>
+                  <p style={{ fontSize: "18px" }}>
+                    <strong
+                      style={{
+                        color: "#00adb5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      Cam kết tư vấn đúng
+                    </strong>
+                    - Chuyên nghiệp và chân thành tư vấn từ tâm, tư vấn đúng vấn
+                    đề, đúng hàng, đúng cách dùng.
+                  </p>
+                </li>
+                <li style={{ display: "flex" }}>
+                  <WrapperCommit>3</WrapperCommit>
+                  <p style={{ fontSize: "18px" }}>
+                    <strong
+                      style={{
+                        color: "#00adb5",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      Cam kết chính hãng
+                    </strong>
+                    - Hoàn tiền 200% nếu phát hiện hàng không chính hãng.
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </Col>
+        <CommentComponent
+          dataHref={
+            process.env.REACT_APP_IS_LOCAL === "true"
+              ? "https://developers.facebook.com/docs/plugins/comments#configurator"
+              : window.location.href
+          }
+          width="1250"
+        />
+      </Row>
+    </Loading>
   );
 };
 
