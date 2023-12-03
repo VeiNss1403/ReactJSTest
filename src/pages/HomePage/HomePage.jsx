@@ -65,6 +65,8 @@ const HomePage = () => {
     retryDelay: 1000,
     keepPreviousData: true,
   });
+  console.log("🚀 ~ file: HomePage.jsx:63 ~ HomePage ~ isPreviousData:", isPreviousData)
+  console.log("🚀 ~ file: HomePage.jsx:62 ~ HomePage ~ products:", products)
 
   useEffect(() => {
     fetchAllTypeProduct();
@@ -104,10 +106,6 @@ const HomePage = () => {
               />
             );
           })}
-
-          {/* {typeProducts.map((item) => {
-            return <TypeProduct name={item} key={item} />;
-          })} */}
         </WrapperTypeProduct>
       </WrapperTypeProductContent>
       <div
@@ -127,6 +125,8 @@ const HomePage = () => {
             padding: 20,
           }}
         >
+          <h1 style={{textAlign:'center',fontWeight:'bold', textShadow:'2px 2px 2px #00adb5',color:'#00adb5'}}>Sản phẩm</h1>
+          
           <WrapperProducts>
             {products?.data?.map((product) => {
               return (

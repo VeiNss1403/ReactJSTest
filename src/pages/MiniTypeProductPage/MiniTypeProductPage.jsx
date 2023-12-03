@@ -2,8 +2,8 @@ import React from "react";
 import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { Col, Pagination, Row } from "antd";
-import { WrapperNavbar, WrapperProducts } from "./style";
-import { useLocation } from "react-router-dom";
+import { WrapperNavbar, WrapperNavigate, WrapperProducts } from "./style";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as ProductService from "../../services/ProductService";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -23,6 +23,16 @@ const MiniTypeProductPage = () => {
     limit: 10,
     total: 1,
   });
+  const navigate = useNavigate();
+  const handleNavigatetype = (miniType) => {
+    navigate(
+      `/product/miniType/${miniType
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        ?.replace(/ /g, "_")}`,
+      { state: miniType }
+    );
+  };
   const fetchProductType = async (miniType, page, limit) => {
     setLoading(true);
     const res = await ProductService.getProductMiniType(miniType, page, limit);
@@ -49,6 +59,13 @@ const MiniTypeProductPage = () => {
     <Loading isLoading={loading}>
       <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
         <div style={{ width: "1270px", margin: "0 auto", height: "100%" }}>
+          <div style={{ paddingTop: "20px" }}>
+            <WrapperNavigate onClick={()=>navigate('/')}>Trang chủ</WrapperNavigate>
+            <WrapperNavigate onClick={()=>handleNavigatetype(state)}>
+              {" > "}
+              {state}
+            </WrapperNavigate>
+          </div>
           <Row
             style={{
               flexWrap: "nowrap",
