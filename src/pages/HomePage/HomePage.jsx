@@ -32,6 +32,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [LoadingMiniType, setLoadingMiniType] = useState(false);
   const [limit, setLimit] = useState(6);
+  const [limitnb, setLimitnb] = useState(6);
   const [typeProducts, setTypeProducts] = useState([]);
   const [typeMiniProducts, setTypeMiniProducts] = useState([]);
   const fetchProductAll = async (context) => {
@@ -65,8 +66,15 @@ const HomePage = () => {
     retryDelay: 1000,
     keepPreviousData: true,
   });
-  console.log("🚀 ~ file: HomePage.jsx:63 ~ HomePage ~ isPreviousData:", isPreviousData)
-  console.log("🚀 ~ file: HomePage.jsx:62 ~ HomePage ~ products:", products)
+  const {
+    isLoading: isLoangingProductnb,
+    data: productsnb,
+    isPreviousDatanb,
+  } = useQuery(["products", searchDebounce], fetchProductAll, {
+    retry: 3,
+    retryDelay: 1000,
+    keepPreviousData: true,
+  });
 
   useEffect(() => {
     fetchAllTypeProduct();
@@ -86,26 +94,33 @@ const HomePage = () => {
     <Loading isLoading={LoadingMiniType}>
       <div>
         {typeMiniProducts.map((item) => {
-          return <WrapperMiniType onClick={() => handleNavigatetype(item)}>{item}</WrapperMiniType>;
+          return (
+            <WrapperMiniType onClick={() => handleNavigatetype(item)}>
+              {item}
+            </WrapperMiniType>
+          );
         })}
       </div>
     </Loading>
   );
 
   return (
-    <Loading isLoading={isLoading || loading}>
+    <Loading isLoading={isLoading || loading || isLoangingProductnb}>
       <WrapperTypeProductContent>
         <WrapperTypeProduct>
-          {typeProducts.map((item) => {
-            return (
-              <TypeProduct
-                content={content}
-                onOpenChange={() => fetchAllMiniTypeProduct(item)}
-                name={item}
-                key={item}
-              />
-            );
-          })}
+          {typeProducts
+            .slice()
+            .reverse()
+            .map((item) => {
+              return (
+                <TypeProduct
+                  content={content}
+                  onOpenChange={() => fetchAllMiniTypeProduct(item)}
+                  name={item}
+                  key={item}
+                />
+              );
+            })}
         </WrapperTypeProduct>
       </WrapperTypeProductContent>
       <div
@@ -125,8 +140,16 @@ const HomePage = () => {
             padding: 20,
           }}
         >
-          <h1 style={{textAlign:'center',fontWeight:'bold', textShadow:'2px 2px 2px #00adb5',color:'#00adb5'}}>Sản phẩm</h1>
-          
+          <h1
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              textShadow: "2px 2px 2px #00adb5",
+              color: "#00adb5",
+            }}
+          >
+            Sản phẩm
+          </h1>
           <WrapperProducts>
             {products?.data?.map((product) => {
               return (
@@ -181,6 +204,87 @@ const HomePage = () => {
                 color: products?.total === products?.data?.length && "#fff",
               }}
               onClick={() => setLimit((prev) => prev + 6)}
+            />
+          </div>
+        </div>
+        <div
+          id="container"
+          style={{
+            height: "auto",
+            width: "1270px",
+            margin: "0 auto",
+            padding: 20,
+          }}
+        >
+          <h1
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              textShadow: "2px 2px 2px #00adb5",
+              color: "#00adb5",
+            }}
+          >
+            Sản phẩm nổi bật
+          </h1>
+          <WrapperProducts>
+            {productsnb?.data
+              ?.slice()
+              .sort((a, b) => {
+                const selledA = a.selled || 0;
+                const selledB = b.selled || 0;
+
+                if (selledA !== 0 && selledB !== 0) {
+                  return selledB - selledA;
+                }
+                return selledB - selledA;
+              })
+              .slice(0, limitnb)
+              .map((productnb) => {
+                return (
+                  <CardComponent
+                    key={productnb._id}
+                    countInStock={productnb.countInStock}
+                    description={productnb.description}
+                    image={productnb.image}
+                    name={productnb.name}
+                    price={productnb.price}
+                    rating={productnb.rating}
+                    type={productnb.type}
+                    selled={productnb.selled}
+                    discount={productnb.discount}
+                    id={productnb._id}
+                  />
+                );
+              })}
+          </WrapperProducts>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
+            }}
+          >
+            <WrapperButtonMore
+              textbutton={isPreviousDatanb ? "Load more" : "Xem thêm"}
+              type="outline"
+              styleButton={{
+                border: `1px solid ${
+                  limitnb >= productsnb?.data?.length ? "#f5f5f5" : "#00adb5"
+                }`,
+                color: `${
+                  limitnb >= productsnb?.data?.length ? "#f5f5f5" : "#00adb5"
+                }`,
+                width: "240px",
+                height: "38px",
+                borderRadius: "4px",
+              }}
+              disabled={limitnb >= productsnb?.data?.length}
+              styleTextButton={{
+                fontWeight: 500,
+                color: limitnb >= productsnb?.data?.length && "#fff",
+              }}
+              onClick={() => setLimitnb((prev) => prev + 6)}
             />
           </div>
         </div>

@@ -46,7 +46,7 @@ export const WrapperFooterItem = styled.div`
   gap: 10px;
   border-top: 1px solid rgb(235, 235, 240);
   width: 100%;
-  align-items:flex-end;
+  align-items:center;
   padding-top: 10px;
   justify-content: space-between;
 `

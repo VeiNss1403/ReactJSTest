@@ -33,7 +33,7 @@ export const WrapperProducts = styled.div`
 export const WrapperMiniType = styled.div`
   color: #00adb5;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: bold;
   line-height: 24px;
   font-family: Inter, sans-serif;

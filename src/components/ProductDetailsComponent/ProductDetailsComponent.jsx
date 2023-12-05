@@ -149,10 +149,6 @@ const ProductDetailsComponent = ({ idProduct }) => {
     <Loading isLoading={isLoading}>
       <Helmet>
         <meta property="og:url" content={window.location.href} />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={productDetails?.name} />
-        <meta property="og:description" content={productDetails?.description} />
-        <meta property="og:image" content={productDetails?.image} />
       </Helmet>
       <Row
         style={{

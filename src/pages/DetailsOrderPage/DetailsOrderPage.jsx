@@ -11,9 +11,7 @@ import {
   WrapperProduct,
   WrapperStyleContent,
 } from "./style";
-import logo from "../../Assets/Images/logo.png";
 import { useLocation, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import * as OrderService from "../../services/OrderService";
 import { useQuery } from "@tanstack/react-query";
 import { orderContant } from "../../contant";
@@ -117,6 +115,8 @@ const DetailsOrderPage = () => {
               <WrapperItemLabel>Giá</WrapperItemLabel>
               <WrapperItemLabel>Số lượng</WrapperItemLabel>
               <WrapperItemLabel>Giảm giá</WrapperItemLabel>
+              <WrapperItemLabel>Tiền giảm giá</WrapperItemLabel>
+              <WrapperItemLabel>Thành tiền</WrapperItemLabel>
             </div>
             {data?.orderItems?.map((order) => {
               return (
@@ -129,10 +129,10 @@ const DetailsOrderPage = () => {
                         width: "70px",
                         height: "70px",
                         objectFit: "cover",
-                        border: "1px solid #eee", // Sử dụng một màu xám nhạt hơn cho đường viền
+                        border: "1px solid #eee",
                         padding: "2px",
-                        borderRadius: "4px", // Thêm border-radius để có hình dáng tròn
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.1)", // Thêm một box shadow nhẹ
+                        borderRadius: "4px",
+                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.1)",
                       }}
                     />
                     <div
@@ -142,7 +142,6 @@ const DetailsOrderPage = () => {
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
                         marginLeft: "10px",
-                        height: "70px",
                       }}
                     >
                       {order?.name}
@@ -150,12 +149,14 @@ const DetailsOrderPage = () => {
                   </WrapperNameProduct>
                   <WrapperItem>{convertPrice(order?.price)}</WrapperItem>
                   <WrapperItem>{order?.amount}</WrapperItem>
+                  <WrapperItem>{order?.discount}%</WrapperItem>
                   <WrapperItem>
-                    {order?.discount
-                      ? convertPrice(
-                          (order?.price * order?.amount * order?.discount) / 100
-                        )
-                      : "0 VND"}
+                    -{convertPrice(
+                      (order?.price * order?.amount * order?.discount) / 100
+                    )}
+                  </WrapperItem>
+                  <WrapperItem>
+                    {convertPrice(order?.price * order?.amount)}
                   </WrapperItem>
                 </WrapperProduct>
               );

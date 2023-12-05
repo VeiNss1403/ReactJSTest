@@ -4,7 +4,7 @@ export const WrapperType = styled.div`
   color: #fff;
   padding: 15px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   line-height: 24px;
   font-family: Inter,sans-serif;
