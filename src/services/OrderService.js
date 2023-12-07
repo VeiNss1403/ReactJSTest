@@ -1,3 +1,4 @@
+import axios from "axios"
 import { axiosJWT } from "./UserService"
 
 
@@ -22,6 +23,18 @@ export const getOrderByUserId = async (id,access_token) => {
 
 export const getDetailsOrder = async (id,access_token) => {
   const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/order/get-details-order/${id}`, {
+      headers: {
+          token: `Bearer ${access_token}`,
+      }
+  })
+  return res.data
+}
+export const getDetailsOrderAdmin = async (id) => {
+  const res = await axios.get(`${process.env.REACT_APP_API_URL}/order/get-details-order/${id}`)
+  return res.data
+}
+export const updateOrder = async (id, access_token, data) => {
+  const res = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/order/update/${id}`, data, {
       headers: {
           token: `Bearer ${access_token}`,
       }

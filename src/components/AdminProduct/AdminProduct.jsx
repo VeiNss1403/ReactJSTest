@@ -55,13 +55,7 @@ const AdminProduct = () => {
   });
   const [stateProduct, setStateProduct] = useState(inittial());
   const [stateProductDetails, setStateProductDetails] = useState(inittial());
-  const [fileList, setFileList] = useState([
-    // {
-    //   uid: "-1",
-    //   thumbUrl:
-    //     "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    // },
-  ]);
+  const [fileList, setFileList] = useState([]);
 
   const [form] = Form.useForm();
 
@@ -469,7 +463,6 @@ const AdminProduct = () => {
       }
     );
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
     setStateProduct({
@@ -537,7 +530,6 @@ const AdminProduct = () => {
     const file = fileList[0];
     file.thumbUrl = await getBase64(file.originFileObj);
     setStateProduct((prevState) => {
-      // Sử dụng prevState để đảm bảo rằng trạng thái được cập nhật đúng cách
       return {
         ...prevState,
         image: file.thumbUrl,
@@ -881,7 +873,7 @@ const AdminProduct = () => {
               </WrapperUploadFile> */}
               <UploadComponent
                 maxCount={1}
-                action="http://localhost:3000/system/admin"
+                action={window.location.href}
                 method="post"
                 onChange={handleOnchangeAvatar}
                 beforeUpload={() => {
@@ -902,7 +894,7 @@ const AdminProduct = () => {
               <UploadComponent
                 maxCount={6}
                 multiple
-                action="http://localhost:3000/system/admin"
+                action={window.location.href}
                 method="post"
                 fileList={fileList}
                 onChange={handleOnchangeAvatarMini}

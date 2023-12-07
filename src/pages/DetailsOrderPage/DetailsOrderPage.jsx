@@ -24,7 +24,7 @@ const DetailsOrderPage = () => {
   const location = useLocation();
   const { state } = location;
   const { id } = params;
-
+  
   const fetchDetailsOrder = async () => {
     const res = await OrderService.getDetailsOrder(id, state?.token);
     return res.data;
