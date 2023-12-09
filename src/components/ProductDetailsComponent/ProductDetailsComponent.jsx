@@ -145,6 +145,15 @@ const ProductDetailsComponent = ({ idProduct }) => {
       { state: miniType }
     );
   };
+  const handleNavigatebrand = (brand) => {
+    navigate(
+      `/product/brand/${brand
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        ?.replace(/ /g, "_")}`,
+      { state: brand }
+    );
+  };
   return (
     <Loading isLoading={isLoading}>
       <Helmet>
@@ -185,7 +194,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           </WrapperStyleNameProduct>
           <div style={{ fontSize: 18 }}>
             Thương hiệu:
-            <WrapperMiniTitle>{productDetails?.brand}</WrapperMiniTitle>
+            <WrapperMiniTitle onClick={() => handleNavigatebrand(productDetails?.brand)}>{productDetails?.brand}</WrapperMiniTitle>
           </div>
           <div style={{ fontSize: 18 }}>
             Loại sản phẩm:

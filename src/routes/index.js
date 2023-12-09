@@ -1,4 +1,5 @@
 import AdminPage from "../pages/AdminPage/AdminPage";
+import BrandProductPage from "../pages/BrandProductPage/BrandProductPage";
 import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
 import HomePage from "../pages/HomePage/HomePage";
 import MiniTypeProductPage from "../pages/MiniTypeProductPage/MiniTypeProductPage";
@@ -58,6 +59,11 @@ export const routes = [
     {
         path: '/product/miniType/:miniType',
         page: MiniTypeProductPage,
+        isShowHeader: true
+    },
+    {
+        path: '/product/brand/:brand',
+        page: BrandProductPage,
         isShowHeader: true
     },
     {

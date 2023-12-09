@@ -4,6 +4,7 @@ import {
   WrapperContent,
   WrapperLableText,
   WrapperTextPrice,
+  WrapperTextRate,
   WrapperTextValue,
 } from "./style";
 
@@ -38,13 +39,21 @@ const NavBarComponent = () => {
       case "star":
         return options.map((option) => {
           return (
-            <div style={{ dispaly: "flex" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+              }}
+            >
               <Rate
-                style={{ fontSize: "12px" }}
+                style={{ fontSize: "12px", cursor: "pointer" }}
                 disabled
                 defaultValue={option}
               />
-              <span > {`tu ${option}  sao`}</span>
+              <span style={{ marginLeft: "5px" }}>{`từ ${option} sao`}</span>
             </div>
           );
         });
@@ -69,7 +78,9 @@ const NavBarComponent = () => {
       <WrapperContent>
         {renderContent("price", [10000, "TV", "MAYGIAT"])}
       </WrapperContent>
-      <WrapperContent>{renderContent("star", [5, 4, 3, 2, 1])}</WrapperContent>
+      <WrapperContent>
+        {renderContent("star", [5, 4, 3, 2, 1, 0])}
+      </WrapperContent>
     </div>
   );
 };

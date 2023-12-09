@@ -313,7 +313,7 @@ const OrderAdmin = () => {
     return result;
   }, [data]);
   useEffect(() => {
-    fetchDetailsOrder();
+    if (rowSelected) fetchDetailsOrder();
   }, [rowSelected]);
   return (
     <div>
