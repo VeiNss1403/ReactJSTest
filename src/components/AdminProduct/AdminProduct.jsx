@@ -207,13 +207,13 @@ const AdminProduct = () => {
   const renderAction = () => {
     return (
       <div>
-        <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
-          onClick={() => setIsModalOpenDelete(true)}
-        />
         <EditOutlined
           style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
           onClick={handleDetailsProduct}
+        />
+        <DeleteOutlined
+          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          onClick={() => setIsModalOpenDelete(true)}
         />
       </div>
     );
@@ -338,6 +338,7 @@ const AdminProduct = () => {
       title: "Đánh giá",
       dataIndex: "rating",
       align: "center",
+      width: 170,
       sorter: (a, b) => a.rating - b.rating,
       filters: [
         {
@@ -359,20 +360,24 @@ const AdminProduct = () => {
     {
       title: "Danh mục",
       dataIndex: "type",
+      width: 170,
     },
     {
       title: "Nước sản xuất",
       dataIndex: "country",
       align: "center",
+      width: 170,
     },
     {
       title: "Thương hiệu",
       dataIndex: "brand",
       align: "center",
+      width: 170,
     },
     {
       title: "Loại sản phẩm",
       dataIndex: "miniType",
+      width: 200,
       align: "center",
     },
     {
@@ -623,7 +628,7 @@ const AdminProduct = () => {
           <PlusOutlined style={{ fontSize: "60px" }} />
         </Button>
       </div>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "20px", width:1180 }}>
         <TableComponent
           filename={"Sản phẩm"}
           handleDelteMany={handleDelteManyProducts}
@@ -631,7 +636,8 @@ const AdminProduct = () => {
           isLoading={isLoadingProducts}
           data={dataTable}
           scroll={{
-            y: 400,
+            x:1500,
+            y: 500,
           }}
           onRow={(record, rowIndex) => {
             return {

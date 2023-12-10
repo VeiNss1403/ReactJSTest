@@ -29,20 +29,27 @@ import { useNavigate } from "react-router-dom";
 const HomePage = () => {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
-  const [loading, setLoading] = useState(false);
   const [LoadingMiniType, setLoadingMiniType] = useState(false);
   const [limit, setLimit] = useState(6);
   const [limitnb, setLimitnb] = useState(6);
   const [typeProducts, setTypeProducts] = useState([]);
   const [typeMiniProducts, setTypeMiniProducts] = useState([]);
-  const fetchProductAll = async (context) => {
-    const limit = context?.queryKey && context?.queryKey[1];
-    const search = context?.queryKey && context?.queryKey[2];
+  const fetchProductAll = async ({ queryKey: [, limit, search] }) => {
     const res = await ProductService.getAllProduct(search, limit);
-
     return res;
   };
 
+  const queryConfig = {
+    retry: 3,
+    retryDelay: 1000,
+    staleTime: 3600000,
+    keepPreviousData: true,
+  };
+  const {
+    isLoading,
+    data: products,
+    isPreviousData,
+  } = useQuery(["products", searchDebounce], fetchProductAll, queryConfig);
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
     if (res?.status === "OK") {
@@ -57,24 +64,6 @@ const HomePage = () => {
     }
     setLoadingMiniType(false);
   };
-  const {
-    isLoading,
-    data: products,
-    isPreviousData,
-  } = useQuery(["products", limit, searchDebounce], fetchProductAll, {
-    retry: 3,
-    retryDelay: 1000,
-    keepPreviousData: true,
-  });
-  const {
-    isLoading: isLoangingProductnb,
-    data: productsnb,
-    isPreviousDatanb,
-  } = useQuery(["products", searchDebounce], fetchProductAll, {
-    retry: 3,
-    retryDelay: 1000,
-    keepPreviousData: true,
-  });
 
   useEffect(() => {
     fetchAllTypeProduct();
@@ -105,7 +94,7 @@ const HomePage = () => {
   );
 
   return (
-    <Loading isLoading={isLoading || loading || isLoangingProductnb}>
+    <Loading isLoading={isLoading}>
       <WrapperTypeProductContent>
         <WrapperTypeProduct>
           {typeProducts
@@ -151,7 +140,7 @@ const HomePage = () => {
             Sản phẩm
           </h1>
           <WrapperProducts>
-            {products?.data?.map((product) => {
+            {products?.data?.slice(0, limit).map((product) => {
               return (
                 <CardComponent
                   key={product._id}
@@ -182,26 +171,19 @@ const HomePage = () => {
               type="outline"
               styleButton={{
                 border: `1px solid ${
-                  products?.total === products?.data?.length
-                    ? "#f5f5f5"
-                    : "#00adb5"
+                  limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
                 }`,
                 color: `${
-                  products?.total === products?.data?.length
-                    ? "#f5f5f5"
-                    : "#00adb5"
+                  limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
                 }`,
                 width: "240px",
                 height: "38px",
                 borderRadius: "4px",
               }}
-              disabled={
-                products?.total === products?.data?.length ||
-                products?.totalPage === 1
-              }
+              disabled={limit >= products?.data?.length}
               styleTextButton={{
                 fontWeight: 500,
-                color: products?.total === products?.data?.length && "#fff",
+                color: limit >= products?.data?.length && "#fff",
               }}
               onClick={() => setLimit((prev) => prev + 6)}
             />
@@ -227,7 +209,7 @@ const HomePage = () => {
             Sản phẩm nổi bật
           </h1>
           <WrapperProducts>
-            {productsnb?.data
+            {products?.data
               ?.slice()
               .sort((a, b) => {
                 const selledA = a.selled || 0;
@@ -266,23 +248,23 @@ const HomePage = () => {
             }}
           >
             <WrapperButtonMore
-              textbutton={isPreviousDatanb ? "Load more" : "Xem thêm"}
+              textbutton={isPreviousData ? "Load more" : "Xem thêm"}
               type="outline"
               styleButton={{
                 border: `1px solid ${
-                  limitnb >= productsnb?.data?.length ? "#f5f5f5" : "#00adb5"
+                  limitnb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
                 }`,
                 color: `${
-                  limitnb >= productsnb?.data?.length ? "#f5f5f5" : "#00adb5"
+                  limitnb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
                 }`,
                 width: "240px",
                 height: "38px",
                 borderRadius: "4px",
               }}
-              disabled={limitnb >= productsnb?.data?.length}
+              disabled={limitnb >= products?.data?.length}
               styleTextButton={{
                 fontWeight: 500,
-                color: limitnb >= productsnb?.data?.length && "#fff",
+                color: limitnb >= products?.data?.length && "#fff",
               }}
               onClick={() => setLimitnb((prev) => prev + 6)}
             />

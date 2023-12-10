@@ -7,9 +7,15 @@ import {
   WrapperTextRate,
   WrapperTextValue,
 } from "./style";
+import { useDispatch } from "react-redux";
+import { brandProduct } from "../../redux/slides/productSlide";
 
 const NavBarComponent = () => {
-  const onChange = () => {};
+  const dispatch = useDispatch();
+  const onChange = (data) => {
+    console.log(data);
+    dispatch(brandProduct(data));
+  };
   const renderContent = (type, options) => {
     switch (type) {
       case "text":
@@ -25,16 +31,9 @@ const NavBarComponent = () => {
               flexDirection: "column",
               gap: "12px",
             }}
+            options={options}
             onChange={onChange}
-          >
-            {options.map((option) => {
-              return (
-                <Checkbox style={{ marginLeft: 0 }} value={option.value}>
-                  {option}
-                </Checkbox>
-              );
-            })}
-          </Checkbox.Group>
+          />
         );
       case "star":
         return options.map((option) => {
@@ -45,15 +44,14 @@ const NavBarComponent = () => {
                 alignItems: "center",
                 cursor: "pointer",
               }}
-              onClick={() => {
-              }}
+              onClick={() => {}}
             >
               <Rate
                 style={{ fontSize: "12px", cursor: "pointer" }}
                 disabled
                 defaultValue={option}
               />
-              <span style={{ marginLeft: "5px" }}>{`từ ${option} sao`}</span>
+              <span style={{ paddingLeft: "5px" }}>{`từ ${option} sao`}</span>
             </div>
           );
         });
@@ -68,16 +66,15 @@ const NavBarComponent = () => {
 
   return (
     <div>
-      <WrapperLableText>Lable</WrapperLableText>
-      <WrapperContent>
-        {renderContent("text", ["Tu lanh", "TV", "MAYGIAT"])}
-      </WrapperContent>
+      <WrapperLableText>Giá sản Phẩm</WrapperLableText>
       <WrapperContent>
         {renderContent("checkbox", ["Tu lanh", "TV", "MAYGIAT"])}
       </WrapperContent>
+      <WrapperLableText>Thương hiệu</WrapperLableText>
       <WrapperContent>
         {renderContent("price", [10000, "TV", "MAYGIAT"])}
       </WrapperContent>
+      <WrapperLableText>Sản phẩm theo số sao đánh giá</WrapperLableText>
       <WrapperContent>
         {renderContent("star", [5, 4, 3, 2, 1, 0])}
       </WrapperContent>

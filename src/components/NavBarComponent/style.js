@@ -2,9 +2,9 @@ import { Rate } from "antd";
 import styled from "styled-components";
 
 export const WrapperLableText = styled.h4`
-  color: rgb(56, 56, 61);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
 `;
 
 export const WrapperTextValue = styled.span`

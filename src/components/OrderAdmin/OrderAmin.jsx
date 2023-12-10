@@ -1,12 +1,11 @@
 import { Button, Form, Select, Space, Table } from "antd";
 import React, { useMemo, useRef, useState } from "react";
 import { WrapperHeader } from "./style";
-import TableComponent from "../TableComponent/TableComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import Loading from "../LoadingComponent/Loading";
 import ModalComponent from "../ModalComponent/ModalComponent";
-import { convertPrice, renderOptions } from "../../utils";
+import { convertPrice } from "../../utils";
 import { useEffect } from "react";
 import * as message from "../Message/Message";
 import {
@@ -36,15 +35,10 @@ import {
 } from "../../pages/DetailsOrderPage/style";
 const OrderAdmin = () => {
   const user = useSelector((state) => state?.user);
-  const inittial = () => ({
-    isPaid: false,
-    isDelivered: false,
-  });
-  const [stateOrder, setStateOrder] = useState(inittial());
+  const [stateOrder, setStateOrder] = useState();
+  const [stateOrderDetail, setStateOrderDetail] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rowSelected, setRowSelected] = useState("");
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const getAllOrder = async () => {
     const res = await OrderService.getAllOrder(user?.access_token);
     return res;
@@ -133,12 +127,17 @@ const OrderAdmin = () => {
     //   ),
   });
 
-  const renderAction = () => {
+  const renderAction = (_, record) => {
     return (
       <div>
         <EditOutlined
           style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
-          onClick={() => setIsOpenDrawer(true)}
+          onClick={() => {
+            setStateOrder(
+              orders?.data?.find((item) => item._id === record._id)
+            );
+            setIsOpenDrawer(true);
+          }}
         />
         <InfoCircleOutlined
           style={{
@@ -146,7 +145,12 @@ const OrderAdmin = () => {
             fontSize: "30px",
             cursor: "pointer",
           }}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setStateOrderDetail(
+              orders?.data?.find((item) => item._id === record._id)
+            );
+            setIsModalOpen(true);
+          }}
         />
       </div>
     );
@@ -155,42 +159,51 @@ const OrderAdmin = () => {
     {
       title: "Người đặt hàng",
       dataIndex: "userName",
+      width: 200,
+      fixed: "left",
       sorter: (a, b) => a.userName.length - b.userName.length,
       ...getColumnSearchProps("userName"),
     },
     {
       title: "Số điện thoại",
       dataIndex: "phone",
+      width: 170,
       sorter: (a, b) => a.phone.length - b.phone.length,
       ...getColumnSearchProps("phone"),
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
+      width: 300,
       sorter: (a, b) => a.address.length - b.address.length,
       ...getColumnSearchProps("address"),
     },
     {
       title: "Thanh toán",
       dataIndex: "isPaid",
+      width: 170,
       sorter: (a, b) => a.isPaid.length - b.isPaid.length,
       ...getColumnSearchProps("isPaid"),
     },
     {
       title: "Giao hàng",
       dataIndex: "isDelivered",
+      width: 170,
       sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
       ...getColumnSearchProps("isDelivered"),
     },
     {
       title: "Phương thức thanh toán",
       dataIndex: "paymentMethod",
+      width: 250,
       sorter: (a, b) => a.paymentMethod.length - b.paymentMethod.length,
       ...getColumnSearchProps("paymentMethod"),
     },
     {
       title: "Giá trị đơn hàng",
       dataIndex: "totalPrice",
+      width: 170,
+      fixed: "right",
       sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
       ...getColumnSearchProps("totalPrice"),
     },
@@ -202,7 +215,9 @@ const OrderAdmin = () => {
       render: renderAction,
     },
   ];
-
+  const replpacePhone = (phone) => {
+    return "0" + phone;
+  };
   const dataTable =
     orders?.data?.length &&
     orders?.data?.map((order) => {
@@ -210,7 +225,7 @@ const OrderAdmin = () => {
         ...order,
         key: order._id,
         userName: order?.shippingAddress?.fullName,
-        phone: order?.shippingAddress?.phone,
+        phone: replpacePhone(order?.shippingAddress?.phone),
         address: order?.shippingAddress?.address,
         paymentMethod: orderContant.payment[order?.paymentMethod],
         isPaid: order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán",
@@ -218,24 +233,26 @@ const OrderAdmin = () => {
         totalPrice: convertPrice(order?.totalPrice),
       };
     });
-  const tableRef = useRef(null);
-  const fetchGetDetailsProduct = async (rowSelected) => {
-    const res = await OrderService.getDetailsOrderAdmin(rowSelected);
-    if (res?.data) {
-      setStateOrder({
-        isPaid: res?.data?.isPaid,
-        isDelivered: res?.data?.isDelivered,
-      });
-    }
-  };
 
-  useEffect(() => {
-    if (rowSelected && isOpenDrawer) {
-      setIsLoadingUpdate(true);
-      fetchGetDetailsProduct(rowSelected);
-      setIsLoadingUpdate(false);
-    }
-  }, [rowSelected, isOpenDrawer]);
+  const tableRef = useRef(null);
+  // const fetchGetDetailsProduct = async (rowSelected) => {
+  //   const res = await OrderService.getDetailsOrderAdmin(rowSelected);
+  //   if (res?.data) {
+  //     setStateOrder({
+  //       isPaid: res?.data?.isPaid,
+  //       isDelivered: res?.data?.isDelivered,
+  //     });
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (rowSelected) {
+  //     setIsLoadingUpdate(true);
+  //     fetchGetDetailsProduct(rowSelected);
+  //     setIsLoadingUpdate(false);
+  //   }
+  // }, [rowSelected]);
+
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
     const res = OrderService.updateOrder(id, token, { ...rests });
@@ -255,9 +272,9 @@ const OrderAdmin = () => {
       message.error();
     }
   }, [isSuccessUpdated]);
-  const onUpdateOrder = () => {
+  const onUpdateOrder = (values) => {
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...stateOrder },
+      { id: stateOrder._id, token: user?.access_token, ...values },
       {
         onSettled: () => {
           queryOrder.refetch();
@@ -266,43 +283,21 @@ const OrderAdmin = () => {
     );
   };
   const [form] = Form.useForm();
-  const handleChangeSelect = (value) => {
-    console.log(
-      "🚀 ~ file: OrderAmin.jsx:258 ~ handleChangeSelect ~ value:",
-      value
-    );
-    setStateOrder({
-      ...stateOrder,
-      isPaid: value,
-    });
-  };
-  const handleChangeSelectIsDelivered = (value) => {
-    setStateOrder({
-      ...stateOrder,
-      isDelivered: value,
-    });
-  };
 
-  const handlelabelIsDelivered = (value) => {
-    if (value === true) {
-      return "Đã giao hàng";
-    } else if (value === false) {
-      return "Chưa giao hàng";
+  useEffect(() => {
+    if (stateOrder) {
+      form.setFields([
+        { name: "isPaid", value: stateOrder?.isPaid },
+        { name: "isDelivered", value: stateOrder?.isDelivered },
+      ]);
     }
-  };
-  const handlelabel = (value) => {
-    if (value === true) {
-      return "Đã thanh toán";
-    } else if (value === false) {
-      return "Chưa thanh toán";
-    }
-  };
+  }, [stateOrder]);
   const fetchDetailsOrder = async () => {
-    const res = await OrderService.getDetailsOrderAdmin(rowSelected);
+    const res = await OrderService.getDetailsOrderAdmin(stateOrderDetail._id);
     return res.data;
   };
   const queryOrderDetail = useQuery({
-    queryKey: ["orders-details", rowSelected],
+    queryKey: ["orders-details", stateOrderDetail],
     queryFn: fetchDetailsOrder,
   });
   const { isLoading, data } = queryOrderDetail;
@@ -312,16 +307,13 @@ const OrderAdmin = () => {
     }, 0);
     return result;
   }, [data]);
-  useEffect(() => {
-    if (rowSelected) fetchDetailsOrder();
-  }, [rowSelected]);
   return (
     <div>
       <WrapperHeader>Quản lý đơn hàng</WrapperHeader>
       <div style={{ height: 200, width: 200 }}>
         <PieChartComponent data={orders?.data} />
       </div>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "20px", width: 1180 }}>
         <Loading isLoading={isLoadingOrders}>
           <DownloadTableExcel
             filename="Order"
@@ -343,13 +335,7 @@ const OrderAdmin = () => {
             ref={tableRef}
             columns={columns}
             dataSource={dataTable}
-            onRow={(record, rowIndex) => {
-              return {
-                onClick: (event) => {
-                  setRowSelected(record._id);
-                },
-              };
-            }}
+            scroll={{ x: 1500, y: 500 }}
           />
         </Loading>
       </div>
@@ -359,7 +345,7 @@ const OrderAdmin = () => {
         onClose={() => setIsOpenDrawer(false)}
         width="90%"
       >
-        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
+        <Loading isLoading={isLoadingUpdated}>
           <Form
             name="basic"
             labelCol={{ span: 3 }}
@@ -374,9 +360,6 @@ const OrderAdmin = () => {
               rules={[{ required: true, message: "Please input your isPaid!" }]}
             >
               <Select
-                name="isPaid"
-                defaultValue={handlelabel(stateOrder?.isPaid)}
-                onChange={handleChangeSelect}
                 options={[
                   { value: true, label: "Đã thanh toán" },
                   { value: false, label: "Chưa thanh toán" },
@@ -391,15 +374,6 @@ const OrderAdmin = () => {
               ]}
             >
               <Select
-                name="isDelivered"
-                labelInValue
-                defaultValue={{
-                  value: stateOrder?.isDelivered,
-                  label: stateOrder?.isDelivered
-                    ? "Đã giao hàng"
-                    : "Chưa giao hàng",
-                }}
-                onChange={handleChangeSelectIsDelivered}
                 options={[
                   { value: true, label: "Đã giao hàng" },
                   { value: false, label: "Chưa giao hàng" },

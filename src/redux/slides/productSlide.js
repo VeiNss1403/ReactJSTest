@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   search: '',
+  brand:[],
 }
 
 export const productSlide = createSlice({
@@ -11,9 +12,12 @@ export const productSlide = createSlice({
     searchProduct: (state, action) => {
       state.search = action.payload
     },
+    brandProduct: (state, action) => { 
+      state.brand= action.payload
+    },
   },
 })
 
-export const { searchProduct } = productSlide.actions
+export const { searchProduct, brandProduct } = productSlide.actions
 
 export default productSlide.reducer
