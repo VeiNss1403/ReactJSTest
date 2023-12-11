@@ -15,7 +15,6 @@ import { convertPrice } from "../../utils";
 const OrderSucess = () => {
   const location = useLocation();
   const { state } = location;
-  console.log("🚀 ~ file: OrderSuccess.jsx:18 ~ OrderSucess ~ state:", state)
   return (
     <div style={{ background: "#f5f5fa", with: "100%", height: "100vh" }}>
       <Loading isLoading={false}>

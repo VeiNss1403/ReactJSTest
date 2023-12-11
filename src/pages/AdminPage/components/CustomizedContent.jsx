@@ -9,9 +9,7 @@ const CustomizedContent = (props) => {
   const { data, colors, setKeySelected } = props;
   return (
     <div style={{ display: "flex", gap: "40px", justifyContent: "center" }}>
-      {/* {data && */}
       {Object.keys(data).map((item) => {
-        console.log("🚀 ~ file: CustomizedContent.jsx:13 ~ data:", data);
         return (
           <div
             key={item}

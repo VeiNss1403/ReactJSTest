@@ -80,12 +80,12 @@ export const WrapperDescriptionTitle = styled.div`
   flex: 0 0 170px;
   color: #696969;
   font-size: 20px;
-  margin-bottom: 10;
+  text-align: right;
 `;
 export const WrapperDescriptionContent = styled.div`
   color: #333333;
   font-size: 20px;
-  margin-bottom: 10;
+  padding: 10px;
 `;
 export const WrapperCommit = styled.span`
   padding: 2px 9px;
@@ -101,6 +101,9 @@ export const WrapperCommit = styled.span`
 `;
 export const WrapperMiniTitle = styled.span`
   padding: 5px;
-  color: #ffe19b;
+  color: #ffca52;
   cursor: pointer;
+  &:hover {
+    color: #00adb5;
+  }
 `;

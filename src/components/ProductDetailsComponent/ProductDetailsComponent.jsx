@@ -194,7 +194,11 @@ const ProductDetailsComponent = ({ idProduct }) => {
           </WrapperStyleNameProduct>
           <div style={{ fontSize: 18 }}>
             Thương hiệu:
-            <WrapperMiniTitle onClick={() => handleNavigatebrand(productDetails?.brand)}>{productDetails?.brand}</WrapperMiniTitle>
+            <WrapperMiniTitle
+              onClick={() => handleNavigatebrand(productDetails?.brand)}
+            >
+              {productDetails?.brand}
+            </WrapperMiniTitle>
           </div>
           <div style={{ fontSize: 18 }}>
             Loại sản phẩm:
@@ -329,7 +333,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   alignItems: "center",
                 }}
               >
-                <WrapperDescriptionTitle>Tên sản phẩm</WrapperDescriptionTitle>
+                <WrapperDescriptionTitle>
+                  Tên sản phẩm:{" "}
+                </WrapperDescriptionTitle>
                 <WrapperDescriptionContent>
                   {productDetails?.name}
                 </WrapperDescriptionContent>
@@ -341,7 +347,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   alignItems: "center",
                 }}
               >
-                <WrapperDescriptionTitle>Thành phần</WrapperDescriptionTitle>
+                <WrapperDescriptionTitle>Thành phần: </WrapperDescriptionTitle>
                 <WrapperDescriptionContent>
                   {productDetails?.ingredient}
                 </WrapperDescriptionContent>
@@ -354,7 +360,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 }}
               >
                 <WrapperDescriptionTitle>
-                  Quốc giá sản xuất
+                  Quốc gia sản xuất:
                 </WrapperDescriptionTitle>
                 <WrapperDescriptionContent>
                   {productDetails?.country}
@@ -367,7 +373,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   alignItems: "center",
                 }}
               >
-                <WrapperDescriptionTitle>Thương hiệu</WrapperDescriptionTitle>
+                <WrapperDescriptionTitle>Thương hiệu: </WrapperDescriptionTitle>
                 <WrapperDescriptionContent>
                   {productDetails?.brand}
                 </WrapperDescriptionContent>
@@ -379,8 +385,20 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   alignItems: "center",
                 }}
               >
+                <WrapperDescriptionTitle>Đối tượng: </WrapperDescriptionTitle>
+                <WrapperDescriptionContent>
+                  {productDetails?.forPerson}
+                </WrapperDescriptionContent>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "1px solid #ccc",
+                  alignItems: "center",
+                }}
+              >
                 <WrapperDescriptionTitle>
-                  Mô tả sản phẩm
+                  Mô tả sản phẩm:
                 </WrapperDescriptionTitle>
                 <WrapperDescriptionContent>
                   {productDetails?.description}

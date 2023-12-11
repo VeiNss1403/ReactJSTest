@@ -29,11 +29,9 @@ import {
   PayPalScriptProvider,
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
-import PaypalComponent from "../../components/PaypalComponent/PaypalComponent";
 
 const PaymentPage = () => {
   const order = useSelector((state) => state?.order);
-  console.log("🚀 ~ file: PaymentPage.jsx:31 ~ PaymentPage ~ order:", order);
   const user = useSelector((state) => state?.user);
 
   const [delivery, setDelivery] = useState("fast");
@@ -183,10 +181,6 @@ const PaymentPage = () => {
       message.error();
     }
   }, [isSuccess, isError]);
-  console.log(
-    "🚀 ~ file: PaymentPage.jsx:179 ~ useEffect ~ order?.shippingPrice:",
-    order?.shippingPrice
-  );
 
   const handleCancleUpdate = () => {
     setStateUserDetails({

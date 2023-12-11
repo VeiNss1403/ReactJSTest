@@ -74,10 +74,9 @@ export const WrapperItemOrder = styled.div`
 
 export const WrapperStatus = styled.div`
   display:flex;
-  align-item:flex-start;
+  justify-content: space-between;
   width: 100%;
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgb(235, 235, 240);
-  flex-direction:column;
 `

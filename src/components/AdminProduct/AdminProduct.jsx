@@ -613,7 +613,7 @@ const AdminProduct = () => {
   };
 
   return (
-    <div>
+    <div style={{paddingLeft:'10px'}}>
       <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
       <div style={{ marginTop: "10px" }}>
         <Button
@@ -628,17 +628,13 @@ const AdminProduct = () => {
           <PlusOutlined style={{ fontSize: "60px" }} />
         </Button>
       </div>
-      <div style={{ marginTop: "20px", width:1180 }}>
+      <div style={{ marginTop: "20px", width:'auto' }}>
         <TableComponent
           filename={"Sản phẩm"}
           handleDelteMany={handleDelteManyProducts}
           columns={columns}
           isLoading={isLoadingProducts}
           data={dataTable}
-          scroll={{
-            x:1500,
-            y: 500,
-          }}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
