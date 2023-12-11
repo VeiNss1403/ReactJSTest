@@ -14,7 +14,8 @@ import { useDebounce } from "../../hooks/useDebounce";
 const BrandProductPage = () => {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
-
+  const test = useSelector((state) => state);
+  const brandProduct = useSelector((state) => state?.product?.brand);
   const { state } = useLocation();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -49,12 +50,12 @@ const BrandProductPage = () => {
   return (
     <Loading isLoading={loading}>
       <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
-        <div style={{ width: "1270px", margin: "0 auto", height: "100%" }}>
+        <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
           <div style={{ paddingTop: "20px" }}>
             <WrapperNavigate onClick={() => navigate("/")}>
               Trang chủ
             </WrapperNavigate>
-            <WrapperNavigate >
+            <WrapperNavigate>
               {" > "}
               Thương hiệu
             </WrapperNavigate>
@@ -70,11 +71,11 @@ const BrandProductPage = () => {
               height: "calc(100% - 20px)",
             }}
           >
-            <WrapperNavbar span={4}>
+            <WrapperNavbar span={5}>
               <NavBarComponent />
             </WrapperNavbar>
             <Col
-              span={20}
+              span={19}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -84,15 +85,23 @@ const BrandProductPage = () => {
               <WrapperProducts>
                 {products
                   ?.filter((pro) => {
-                    if (
+                    const nameMatch =
                       searchDebounce === "" ||
                       pro?.name
                         ?.toLowerCase()
-                        .includes(searchDebounce?.toLowerCase())
-                    ) {
-                      return true;
-                    }
-                    return false;
+                        .includes(searchDebounce?.toLowerCase());
+
+                    const brandMatch =
+                      brandProduct.length === 0 ||
+                      brandProduct.includes(pro?.brand);
+
+                    const priceFilter =
+                      pro?.price >= test?.product?.pricemin &&
+                      pro?.price <= test?.product?.pricemax;
+                    const ratingFilter = pro?.rating >= test?.product?.rating;
+                    return (
+                      nameMatch && brandMatch && priceFilter && ratingFilter
+                    );
                   })
                   ?.map((product) => (
                     <CardComponent

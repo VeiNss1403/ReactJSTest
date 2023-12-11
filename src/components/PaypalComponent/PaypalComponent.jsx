@@ -10,10 +10,6 @@ const style = { layout: "vertical" };
 
 // Custom component to wrap the PayPalButtons and show loading spinner
 const ButtonWrapper = ({ showSpinner, currency, amount, onApprove }) => {
-  console.log(
-    "🚀 ~ file: PaypalComponent.jsx:13 ~ ButtonWrapper ~ onApprove:",
-    onApprove
-  );
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
   useEffect(() => {
     dispatch({

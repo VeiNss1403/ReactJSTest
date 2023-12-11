@@ -9,11 +9,16 @@ import { useState } from "react";
 import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
+import { WrapperNavigate } from "../MiniTypeProductPage/style";
+import { useNavigate } from "react-router-dom";
 const ProductPage = () => {
   const searchProduct = useSelector((state) => state?.product?.search);
+  const test = useSelector((state) => state);
+  const brandProduct = useSelector((state) => state?.product?.brand);
   const searchDebounce = useDebounce(searchProduct, 500);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [panigate, setPanigate] = useState({
     page: 0,
     limit: 10,
@@ -42,7 +47,14 @@ const ProductPage = () => {
   return (
     <Loading isLoading={loading}>
       <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
-        <div style={{ width: "1270px", margin: "0 auto", height: "100%" }}>
+        <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
+          <WrapperNavigate onClick={() => navigate("/")}>
+            Trang chủ
+          </WrapperNavigate>
+          <WrapperNavigate>
+            {" > "}
+            Sản phẩm
+          </WrapperNavigate>
           <Row
             style={{
               flexWrap: "nowrap",
@@ -50,11 +62,11 @@ const ProductPage = () => {
               height: "calc(100% - 20px)",
             }}
           >
-            <WrapperNavbar span={4}>
+            <WrapperNavbar span={5}>
               <NavBarComponent />
             </WrapperNavbar>
             <Col
-              span={20}
+              span={19}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -62,23 +74,35 @@ const ProductPage = () => {
               }}
             >
               <WrapperProducts>
-                {products?.map((product) => {
-                  return (
-                    <CardComponent
-                      key={product._id}
-                      countInStock={product.countInStock}
-                      description={product.description}
-                      image={product.image}
-                      name={product.name}
-                      price={product.price}
-                      rating={product.rating}
-                      type={product.type}
-                      selled={product.selled}
-                      discount={product.discount}
-                      id={product._id}
-                    />
-                  );
-                })}
+                {products
+                  ?.filter((pro) => {
+                    const brandMatch =
+                      brandProduct.length === 0 ||
+                      brandProduct.includes(pro?.brand);
+
+                    const priceFilter =
+                      pro?.price >= test?.product?.pricemin &&
+                      pro?.price <= test?.product?.pricemax;
+                    const ratingFilter = pro?.rating >= test?.product?.rating;
+                    return brandMatch && priceFilter && ratingFilter;
+                  })
+                  .map((product) => {
+                    return (
+                      <CardComponent
+                        key={product._id}
+                        countInStock={product.countInStock}
+                        description={product.description}
+                        image={product.image}
+                        name={product.name}
+                        price={product.price}
+                        rating={product.rating}
+                        type={product.type}
+                        selled={product.selled}
+                        discount={product.discount}
+                        id={product._id}
+                      />
+                    );
+                  })}
               </WrapperProducts>
               <Pagination
                 defaultCurrent={panigate.page + 1}

@@ -308,12 +308,12 @@ const OrderAdmin = () => {
     return result;
   }, [data]);
   return (
-    <div>
+    <div style={{paddingLeft:'10px'}}>
       <WrapperHeader>Quản lý đơn hàng</WrapperHeader>
       <div style={{ height: 200, width: 200 }}>
         <PieChartComponent data={orders?.data} />
       </div>
-      <div style={{ marginTop: "20px", width: 1180 }}>
+      <div style={{ marginTop: "20px", width: "auto" }}>
         <Loading isLoading={isLoadingOrders}>
           <DownloadTableExcel
             filename="Order"
@@ -335,7 +335,10 @@ const OrderAdmin = () => {
             ref={tableRef}
             columns={columns}
             dataSource={dataTable}
-            scroll={{ x: 1500, y: 500 }}
+            scroll={{
+              x: 2000,
+              y: 500,
+            }}
           />
         </Loading>
       </div>

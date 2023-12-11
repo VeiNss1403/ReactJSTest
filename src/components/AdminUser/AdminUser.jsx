@@ -230,6 +230,7 @@ const AdminUser = () => {
     {
       title: "Tên",
       dataIndex: "name",
+      fixed:'left',
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
@@ -268,6 +269,8 @@ const AdminUser = () => {
     {
       title: "Action",
       dataIndex: "action",
+      width:'100px',
+      fixed:'right', 
       render: renderAction,
     },
   ];
@@ -366,9 +369,9 @@ const AdminUser = () => {
   };
 
   return (
-    <div>
+    <div style={{width:'auto', paddingLeft:'10px'}}>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "20px", width:'auto' }}>
         <TableComponent
           filename={"Người dùng"}
           handleDelteMany={handleDelteManyUsers}

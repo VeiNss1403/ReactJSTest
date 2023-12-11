@@ -65,6 +65,10 @@ const TableComponent = (props) => {
           ...rowSelection,
         }}
         columns={columns}
+        scroll={{
+            x:2000,
+            y: 500,
+          }}
         dataSource={dataSource}
         {...props}
       />

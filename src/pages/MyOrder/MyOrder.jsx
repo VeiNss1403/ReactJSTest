@@ -17,7 +17,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as message from "../../components/Message/Message";
 import moment from "moment/moment";
-
+import { CheckCircleOutlined } from "@ant-design/icons";
 const MyOrderPage = () => {
   const location = useLocation();
   const { state } = location;
@@ -124,9 +124,30 @@ const MyOrderPage = () => {
       );
     });
   };
-
+  const mutationUpdate = useMutationHooks((data) => {
+    console.log("🚀 ~ file: MyOrder.jsx:128 ~ mutationUpdate ~ data:", data);
+    const { id, token, ...rests } = data;
+    const res = OrderService.updateOrder(id, token, { ...rests });
+    return res;
+  });
+  const {
+    data: dataUpdated,
+    isLoading: isLoadingUpdated,
+    isSuccess: isSuccessUpdated,
+    isError: isErrorUpdated,
+  } = mutationUpdate;
+  const handleCompletedOrder = (data) => {
+    mutationUpdate.mutate(
+      { id: data, token: user?.access_token, isCompleted: true },
+      {
+        onSettled: () => {
+          queryOrder.refetch();
+        },
+      }
+    );
+  };
   return (
-    <Loading isLoading={isLoading || isLoadingCancel}>
+    <Loading isLoading={isLoading || isLoadingCancel || isLoadingUpdated}>
       <WrapperContainer>
         <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
           <h3
@@ -143,52 +164,104 @@ const MyOrderPage = () => {
               return (
                 <WrapperItemOrder key={order?._id}>
                   <WrapperStatus>
-                    <span style={{ fontSize: "14px", fontWeight: "bold" }}>
-                      Trạng thái
-                    </span>
-                    <div>
-                      <span style={{ color: "rgb(255, 66, 78)" }}>
-                        Giao hàng:{" "}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <span style={{ fontSize: "14px", fontWeight: "bold" }}>
+                        Trạng thái
                       </span>
-                      <span
+                      <div>
+                        <span style={{ color: "rgb(255, 66, 78)" }}>
+                          Giao hàng:{" "}
+                        </span>
+                        <span
+                          style={{
+                            color: "rgb(90, 32, 193)",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {order.isDelivered
+                            ? "Đã giao hàng"
+                            : "Chưa giao hàng"}
+                        </span>
+                      </div>
+                      <div>
+                        <span style={{ color: "rgb(255, 66, 78)" }}>
+                          Thanh toán:{" "}
+                        </span>
+                        <span
+                          style={{
+                            color: "rgb(90, 32, 193)",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                        </span>
+                      </div>
+                    </div>
+                    {order?.isCompleted ? (
+                      <div
                         style={{
-                          color: "rgb(90, 32, 193)",
-                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
                         }}
                       >
-                        {order.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}
-                      </span>
-                    </div>
-                    <div>
-                      <span style={{ color: "rgb(255, 66, 78)" }}>
-                        Thanh toán:{" "}
-                      </span>
-                      <span
-                        style={{
-                          color: "rgb(90, 32, 193)",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
-                      </span>
-                    </div>
+                        <span style={{ fontSize: 25, color: "green" }}>
+                          <CheckCircleOutlined /> Đã hoàn thành
+                        </span>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </WrapperStatus>
                   {renderProduct(order?.orderItems)}
                   <WrapperFooterItem>
-                    <div>
-                      <span style={{ color: "rgb(255, 66, 78)" }}>
-                        Ngày đặt hàng:
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "13px",
-                          color: "rgb(56, 56, 61)",
-                          fontWeight: 700,
-                          paddingLeft: 5,
-                        }}
-                      >
-                        {moment(order?.createdAt).format("DD-MM-YYYY")}
-                      </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-end",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {order?.isCompleted ? (
+                        <div>
+                          <span style={{ color: "rgb(255, 66, 78)" }}>
+                            Ngày hoàn thành:
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "13px",
+                              color: "rgb(56, 56, 61)",
+                              fontWeight: 700,
+                              paddingLeft: 5,
+                            }}
+                          >
+                            {moment(order?.updatedAt).format("DD-MM-YYYY")}
+                          </span>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+
+                      <div>
+                        <span style={{ color: "rgb(255, 66, 78)" }}>
+                          Ngày đặt hàng:
+                        </span>
+                        <span
+                          style={{
+                            fontSize: "13px",
+                            color: "rgb(56, 56, 61)",
+                            fontWeight: 700,
+                            paddingLeft: 5,
+                          }}
+                        >
+                          {moment(order?.createdAt).format("DD-MM-YYYY")}
+                        </span>
+                      </div>
                     </div>
                     <div>
                       <div style={{ textAlign: "right" }}>
@@ -223,12 +296,13 @@ const MyOrderPage = () => {
                         ></ButtonComponent>
                         {order?.isDelivered ? (
                           <ButtonComponent
-                            onClick={() => handleDetailsOrder(order?._id)}
+                            onClick={() => handleCompletedOrder(order?._id)}
                             size={40}
                             styleButton={{
                               height: "36px",
                               border: "1px solid #9255FD",
                               borderRadius: "4px",
+                              display: order?.isCompleted ? "none" : "block",
                             }}
                             textbutton={"Xác nhận giao hàng"}
                             styleTextButton={{

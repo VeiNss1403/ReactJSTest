@@ -42,7 +42,7 @@ const HomePage = () => {
   const queryConfig = {
     retry: 3,
     retryDelay: 1000,
-    staleTime: 3600000,
+    staleTime: 1000 * 60,
     keepPreviousData: true,
   };
   const {

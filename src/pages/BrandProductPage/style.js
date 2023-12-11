@@ -13,7 +13,8 @@ export const WrapperNavbar = styled(Col)`
   padding: 10px;
   border-radius: 4px;
   height: fit-content;
-  width: 200px;
+  width: auto;
+  box-shadow: 1px 1px 5px #000000;
 `;
 export const WrapperNavigate = styled.span`
   font-size: 20px;

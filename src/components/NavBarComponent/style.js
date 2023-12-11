@@ -1,10 +1,11 @@
-import { Rate } from "antd";
+import { Checkbox, Rate } from "antd";
 import styled from "styled-components";
 
 export const WrapperLableText = styled.h4`
   font-size: 16px;
   color: #333;
   font-weight: bold;
+  padding-bottom: 5px;
 `;
 
 export const WrapperTextValue = styled.span`
@@ -18,6 +19,7 @@ export const WrapperContent = styled.div`
   // align-items: center;
   flex-direction: column;
   gap: 12px;
+  padding-bottom: 5px;
 `;
 
 export const WrapperTextPrice = styled.div`

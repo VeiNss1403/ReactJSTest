@@ -1,4 +1,4 @@
-import { Menu } from "antd";
+import { Col, Menu, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { getItem } from "../../utils";
 import {
@@ -22,7 +22,6 @@ import { useSelector } from "react-redux";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "../../components/LoadingComponent/Loading";
 
 const AdminPage = () => {
   const user = useSelector((state) => state.user);
@@ -85,7 +84,6 @@ const AdminPage = () => {
   };
 
   const renderPage = (key) => {
-    console.log("🚀 ~ file: AdminPage.jsx:77 ~ renderPage ~ key:", key);
     switch (key) {
       case "users":
         return <AdminUser />;
@@ -116,26 +114,20 @@ const AdminPage = () => {
   return (
     <>
       <HeaderComponent isHiddenSearch isHiddenCart isHiddenElement />
-      <div style={{ display: "flex", overflowX: "hidden" }}>
-        <Menu
-          mode="inline"
-          style={{
-            width: 256,
-            boxShadow: "1px 1px 2px #ccc",
-            height: "90vh",
-          }}
-          items={items}
-          onClick={handleOnCLick}
-        />
-        <div style={{ flex: 1, padding: "15px 0 15px 15px" }}>
-          {/* <Loading isLoading={memoCount && Object.keys(memoCount) && Object.keys(memoCount).length !== 3}>
-            {!keySelected && (
-              <CustomizedContent data={memoCount} colors={COLORS} setKeySelected={setKeySelected} />
-            )}
-          </Loading> */}
-          {renderPage(keySelected)}
-        </div>
-      </div>
+      <Row>
+        <Col span={4}>
+          <Menu
+            mode="inline"
+            style={{
+              boxShadow: "1px 1px 2px #ccc",
+              height: "90vh",
+            }}
+            items={items}
+            onClick={handleOnCLick}
+          />
+        </Col>
+        <Col span={20}>{renderPage(keySelected)}</Col>
+      </Row>
     </>
   );
 };
