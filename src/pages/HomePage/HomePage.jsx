@@ -31,11 +31,28 @@ const HomePage = () => {
   const searchDebounce = useDebounce(searchProduct, 500);
   const [LoadingMiniType, setLoadingMiniType] = useState(false);
   const [limit, setLimit] = useState(6);
-  const [limitnb, setLimitnb] = useState(6);
+  const [page, setPage] = useState(0);
+  const [limitNb, setLimitNb] = useState(6);
+  const [pageNb, setPageNb] = useState(0);
+  const [dataProduct, setDataProduct] = useState([]);
+  const [dataProductNb, setDataProductNb] = useState([]);
+
   const [typeProducts, setTypeProducts] = useState([]);
   const [typeMiniProducts, setTypeMiniProducts] = useState([]);
-  const fetchProductAll = async ({ queryKey: [, limit, search] }) => {
-    const res = await ProductService.getAllProduct(search, limit);
+  const fetchProductAll = async ({ queryKey: [, page, limit, search] }) => {
+    const res = await ProductService.getAllProduct(search, limit, page);
+    return res;
+  };
+
+  const fetchProductNbAll = async ({
+    queryKey: [, pageNb, limitNb, search, sort],
+  }) => {
+    const res = await ProductService.getAllProduct(
+      search,
+      limitNb,
+      pageNb,
+      sort
+    );
     return res;
   };
 
@@ -49,7 +66,37 @@ const HomePage = () => {
     isLoading,
     data: products,
     isPreviousData,
-  } = useQuery(["products", searchDebounce], fetchProductAll, queryConfig);
+  } = useQuery(
+    ["products", page, limit, searchDebounce],
+    fetchProductAll,
+    queryConfig
+  );
+
+  const {
+    isLoading: isLoadingNb,
+    data: productNbs,
+    isPreviousData: isPreviousDataNb,
+  } = useQuery(
+    ["products-nb", pageNb, limitNb, searchDebounce, { selled: -1 }],
+    fetchProductNbAll,
+    queryConfig
+  );
+
+  useEffect(() => {
+    if (products && products?.data?.length > 0) {
+      setDataProduct((prev) => [...prev, ...products?.data]);
+    }
+  }, [products]);
+
+  useEffect(() => {
+    if (productNbs && productNbs?.data?.length > 0) {
+      setDataProductNb((prev) => [
+        ...prev,
+        ...productNbs?.data.sort((a, b) => b.selled - a.selled),
+      ]);
+    }
+  }, [productNbs]);
+
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
     if (res?.status === "OK") {
@@ -94,7 +141,7 @@ const HomePage = () => {
   );
 
   return (
-    <Loading isLoading={isLoading}>
+    <>
       <WrapperTypeProductContent>
         <WrapperTypeProduct>
           {typeProducts
@@ -139,55 +186,57 @@ const HomePage = () => {
           >
             Sản phẩm
           </h1>
-          <WrapperProducts>
-            {products?.data?.slice(0, limit).map((product) => {
-              return (
-                <CardComponent
-                  key={product._id}
-                  countInStock={product.countInStock}
-                  description={product.description}
-                  image={product.image}
-                  name={product.name}
-                  price={product.price}
-                  rating={product.rating}
-                  type={product.type}
-                  selled={product.selled}
-                  discount={product.discount}
-                  id={product._id}
-                />
-              );
-            })}
-          </WrapperProducts>
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "20px",
-            }}
-          >
-            <WrapperButtonMore
-              textbutton={isPreviousData ? "Load more" : "Xem thêm"}
-              type="outline"
-              styleButton={{
-                border: `1px solid ${
-                  limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
-                }`,
-                color: `${
-                  limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
-                }`,
-                width: "240px",
-                height: "38px",
-                borderRadius: "4px",
+          <Loading isLoading={isLoading}>
+            <WrapperProducts>
+              {dataProduct?.map((product) => {
+                return (
+                  <CardComponent
+                    key={product._id}
+                    countInStock={product.countInStock}
+                    description={product.description}
+                    image={product.image}
+                    name={product.name}
+                    price={product.price}
+                    rating={product.rating}
+                    type={product.type}
+                    selled={product.selled}
+                    discount={product.discount}
+                    id={product._id}
+                  />
+                );
+              })}
+            </WrapperProducts>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
               }}
-              disabled={limit >= products?.data?.length}
-              styleTextButton={{
-                fontWeight: 500,
-                color: limit >= products?.data?.length && "#fff",
-              }}
-              onClick={() => setLimit((prev) => prev + 6)}
-            />
-          </div>
+            >
+              <WrapperButtonMore
+                textbutton={isPreviousData ? "Load more" : "Xem thêm"}
+                type="outline"
+                styleButton={{
+                  border: `1px solid ${
+                    limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                  }`,
+                  color: `${
+                    limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                  }`,
+                  width: "240px",
+                  height: "38px",
+                  borderRadius: "4px",
+                }}
+                disabled={limit >= products?.data?.length}
+                styleTextButton={{
+                  fontWeight: 500,
+                  color: limit >= products?.data?.length && "#fff",
+                }}
+                onClick={() => setPage((prev) => prev + 1)}
+              />
+            </div>
+          </Loading>
         </div>
         <div
           id="container"
@@ -208,20 +257,9 @@ const HomePage = () => {
           >
             Sản phẩm nổi bật
           </h1>
-          <WrapperProducts>
-            {products?.data
-              ?.slice()
-              .sort((a, b) => {
-                const selledA = a.selled || 0;
-                const selledB = b.selled || 0;
-
-                if (selledA !== 0 && selledB !== 0) {
-                  return selledB - selledA;
-                }
-                return selledB - selledA;
-              })
-              .slice(0, limitnb)
-              .map((productnb) => {
+          <Loading isLoading={isLoadingNb}>
+            <WrapperProducts>
+              {dataProductNb?.map((productnb) => {
                 return (
                   <CardComponent
                     key={productnb._id}
@@ -238,40 +276,41 @@ const HomePage = () => {
                   />
                 );
               })}
-          </WrapperProducts>
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "20px",
-            }}
-          >
-            <WrapperButtonMore
-              textbutton={isPreviousData ? "Load more" : "Xem thêm"}
-              type="outline"
-              styleButton={{
-                border: `1px solid ${
-                  limitnb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
-                }`,
-                color: `${
-                  limitnb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
-                }`,
-                width: "240px",
-                height: "38px",
-                borderRadius: "4px",
+            </WrapperProducts>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
               }}
-              disabled={limitnb >= products?.data?.length}
-              styleTextButton={{
-                fontWeight: 500,
-                color: limitnb >= products?.data?.length && "#fff",
-              }}
-              onClick={() => setLimitnb((prev) => prev + 6)}
-            />
-          </div>
+            >
+              <WrapperButtonMore
+                textbutton={isPreviousDataNb ? "Load more" : "Xem thêm"}
+                type="outline"
+                styleButton={{
+                  border: `1px solid ${
+                    limitNb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                  }`,
+                  color: `${
+                    limitNb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                  }`,
+                  width: "240px",
+                  height: "38px",
+                  borderRadius: "4px",
+                }}
+                disabled={limitNb >= products?.data?.length}
+                styleTextButton={{
+                  fontWeight: 500,
+                  color: limitNb >= products?.data?.length && "#fff",
+                }}
+                onClick={() => setPageNb((prev) => prev + 1)}
+              />
+            </div>
+          </Loading>
         </div>
       </div>
-    </Loading>
+    </>
   );
 };
 
