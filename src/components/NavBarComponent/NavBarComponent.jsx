@@ -43,7 +43,7 @@ const NavBarComponent = () => {
     queryFn: fetchAllBrandProduct,
   });
   const brandFirst = queryBrand?.data?.data?.slice(0, limit);
-  
+
   const renderContent = (type, options) => {
     switch (type) {
       case "text":
@@ -134,7 +134,7 @@ const NavBarComponent = () => {
 
   return (
     <div>
-      <WrapperLableText>Giá sản Phẩm</WrapperLableText>
+      <WrapperLableText>Giá sản phẩm</WrapperLableText>
       <span>Chọn khoảng giá</span>
       <WrapperContent>{renderContent("price")}</WrapperContent>
       <WrapperLableText>Thương hiệu</WrapperLableText>
