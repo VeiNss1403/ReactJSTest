@@ -1,4 +1,4 @@
-import { Badge, Image, Col, Popover} from "antd";
+import { Badge, Image, Col, Popover } from "antd";
 import React from "react";
 import {
   WrapperContentPopup,
@@ -49,7 +49,7 @@ const HeaderComponent = ({
     await UserService.logoutUser();
     dispatch(resetUser());
     setLoading(false);
-    message.success('Đăng xuất thành công!')
+    message.success("Đăng xuất thành công!");
   };
 
   useEffect(() => {
@@ -85,6 +85,8 @@ const HeaderComponent = ({
       navigate("/system/admin");
     } else if (type === "products") {
       navigate("/products");
+    } else if (type === "about") {
+      navigate("/about");
     } else if (type === "my-order") {
       navigate("/my-order", {
         state: {
@@ -131,7 +133,9 @@ const HeaderComponent = ({
         <Col span={6} style={{ display: "flex" }}>
           {!isHiddenElement && (
             <>
-              <WrapperHearderMenu>Giới thiệu ECONUTRI</WrapperHearderMenu>
+              <WrapperHearderMenu onClick={() => handleClickNavigate("about")}>
+                Giới thiệu ECONUTRI
+              </WrapperHearderMenu>
               <WrapperHearderMenu
                 onClick={() => handleClickNavigate("products")}
               >
