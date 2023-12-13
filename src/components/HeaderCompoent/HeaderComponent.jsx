@@ -70,7 +70,7 @@ const HeaderComponent = ({
         </WrapperContentPopup>
       )}
       <WrapperContentPopup onClick={() => handleClickNavigate(`my-order`)}>
-        Đơn hàng của tôi
+        Lịch sử đơn hàng
       </WrapperContentPopup>
       <WrapperContentPopup onClick={() => handleClickNavigate()}>
         Đăng xuất

@@ -56,34 +56,34 @@ const TypeProductPage = () => {
     setPanigate({ ...panigate, page: current - 1, limit: pageSize });
   };
   return (
-    <Loading isLoading={loading}>
-      <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
-        <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
-          <WrapperNavigate onClick={() => navigate("/")}>
-            Trang chủ
-          </WrapperNavigate>
-          <WrapperNavigate onClick={() => handleNavigatetype(state)}>
-            {" > "}
-            {state}
-          </WrapperNavigate>
-          <Row
+    <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
+      <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
+        <WrapperNavigate onClick={() => navigate("/")}>
+          Trang chủ
+        </WrapperNavigate>
+        <WrapperNavigate onClick={() => handleNavigatetype(state)}>
+          {" > "}
+          {state}
+        </WrapperNavigate>
+        <Row
+          style={{
+            flexWrap: "nowrap",
+            paddingTop: "10px",
+            height: "calc(100% - 20px)",
+          }}
+        >
+          <WrapperNavbar span={5}>
+            <NavBarComponent />
+          </WrapperNavbar>
+          <Col
+            span={19}
             style={{
-              flexWrap: "nowrap",
-              paddingTop: "10px",
-              height: "calc(100% - 20px)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
-            <WrapperNavbar span={5}>
-              <NavBarComponent />
-            </WrapperNavbar>
-            <Col
-              span={19}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
+            <Loading isLoading={loading}>
               <div>
                 <WrapperProducts>
                   {products
@@ -130,11 +130,11 @@ const TypeProductPage = () => {
                   style={{ textAlign: "center", marginTop: "10px" }}
                 />
               </div>
-            </Col>
-          </Row>
-        </div>
+            </Loading>
+          </Col>
+        </Row>
       </div>
-    </Loading>
+    </div>
   );
 };
 

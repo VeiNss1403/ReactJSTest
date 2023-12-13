@@ -35,6 +35,7 @@ const MyOrderPage = () => {
     }
   );
   const { isLoading, data } = queryOrder;
+  console.log("🚀 ~ file: MyOrder.jsx:38 ~ MyOrderPage ~ data:", data)
 
   const handleDetailsOrder = (id) => {
     navigate(`/details-order/${id}`, {
@@ -157,7 +158,7 @@ const MyOrderPage = () => {
               textShadow: "2px 2px 7px #00adb5",
             }}
           >
-            Đơn hàng của tôi
+            Lịch sử đơn hàng
           </h3>
           <WrapperListOrder>
             {data?.map((order) => {
@@ -203,7 +204,7 @@ const MyOrderPage = () => {
                         </span>
                       </div>
                     </div>
-                    {order?.isCompleted ? (
+                    {order?.isCompleted && order?.isPaid ? (
                       <div
                         style={{
                           display: "flex",
@@ -227,7 +228,7 @@ const MyOrderPage = () => {
                         flexDirection: "column",
                       }}
                     >
-                      {order?.isCompleted ? (
+                      {order?.isCompleted && order?.isPaid ? (
                         <div>
                           <span style={{ color: "rgb(255, 66, 78)" }}>
                             Ngày hoàn thành:

@@ -39,7 +39,6 @@ const FooterComponent = () => {
         justifyContent: "center",
         alignItems: "center",
         marginTop: 10,
-        paddingBottom: 30,
       }}
     >
       <WrapperFooter>

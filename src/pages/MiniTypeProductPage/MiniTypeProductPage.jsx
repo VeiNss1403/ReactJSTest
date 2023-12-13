@@ -57,36 +57,36 @@ const MiniTypeProductPage = () => {
   };
 
   return (
-    <Loading isLoading={loading}>
-      <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
-        <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
-          <div style={{ paddingTop: "20px" }}>
-            <WrapperNavigate onClick={() => navigate("/")}>
-              Trang chủ
-            </WrapperNavigate>
-            <WrapperNavigate onClick={() => handleNavigatetype(state)}>
-              {" > "}
-              {state}
-            </WrapperNavigate>
-          </div>
-          <Row
+    <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
+      <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
+        <div style={{ paddingTop: "20px" }}>
+          <WrapperNavigate onClick={() => navigate("/")}>
+            Trang chủ
+          </WrapperNavigate>
+          <WrapperNavigate onClick={() => handleNavigatetype(state)}>
+            {" > "}
+            {state}
+          </WrapperNavigate>
+        </div>
+        <Row
+          style={{
+            flexWrap: "nowrap",
+            paddingTop: "10px",
+            height: "calc(100% - 20px)",
+          }}
+        >
+          <WrapperNavbar span={5}>
+            <NavBarComponent />
+          </WrapperNavbar>
+          <Col
+            span={19}
             style={{
-              flexWrap: "nowrap",
-              paddingTop: "10px",
-              height: "calc(100% - 20px)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
-            <WrapperNavbar span={5}>
-              <NavBarComponent />
-            </WrapperNavbar>
-            <Col
-              span={19}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
+            <Loading isLoading={loading}>
               <WrapperProducts>
                 {products
                   ?.filter((pro) => {
@@ -131,11 +131,11 @@ const MiniTypeProductPage = () => {
                 onChange={onChange}
                 style={{ textAlign: "center", marginTop: "10px" }}
               />
-            </Col>
-          </Row>
-        </div>
+            </Loading>
+          </Col>
+        </Row>
       </div>
-    </Loading>
+    </div>
   );
 };
 

@@ -36,11 +36,14 @@ const HomePage = () => {
   const [pageNb, setPageNb] = useState(0);
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductNb, setDataProductNb] = useState([]);
-
+  console.log("🚀 ~ file: HomePage.jsx:39 ~ HomePage ~ dataProductNb:", dataProductNb)
   const [typeProducts, setTypeProducts] = useState([]);
   const [typeMiniProducts, setTypeMiniProducts] = useState([]);
   const fetchProductAll = async ({ queryKey: [, page, limit, search] }) => {
     const res = await ProductService.getAllProduct(search, limit, page);
+    if (res?.data) {
+      setDataProduct((prev) => [...prev, ...res?.data]);
+    }
     return res;
   };
 
@@ -53,13 +56,18 @@ const HomePage = () => {
       pageNb,
       sort
     );
+    if (res?.data) {
+      setDataProductNb((prev) => [
+        ...prev,
+        ...res?.data.sort((a, b) => b.selled - a.selled),
+      ]);
+    }
     return res;
   };
 
   const queryConfig = {
     retry: 3,
     retryDelay: 1000,
-    staleTime: 1000 * 60,
     keepPreviousData: true,
   };
   const {
@@ -81,22 +89,6 @@ const HomePage = () => {
     fetchProductNbAll,
     queryConfig
   );
-
-  useEffect(() => {
-    if (products && products?.data?.length > 0) {
-      setDataProduct((prev) => [...prev, ...products?.data]);
-    }
-  }, [products]);
-
-  useEffect(() => {
-    if (productNbs && productNbs?.data?.length > 0) {
-      setDataProductNb((prev) => [
-        ...prev,
-        ...productNbs?.data.sort((a, b) => b.selled - a.selled),
-      ]);
-    }
-  }, [productNbs]);
-
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
     if (res?.status === "OK") {
@@ -114,7 +106,6 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchAllTypeProduct();
-    fetchAllMiniTypeProduct();
   }, []);
   const navigate = useNavigate();
   const handleNavigatetype = (miniType) => {
@@ -131,7 +122,10 @@ const HomePage = () => {
       <div>
         {typeMiniProducts.map((item) => {
           return (
-            <WrapperMiniType onClick={() => handleNavigatetype(item)}>
+            <WrapperMiniType
+              key={item}
+              onClick={() => handleNavigatetype(item)}
+            >
               {item}
             </WrapperMiniType>
           );
@@ -219,19 +213,23 @@ const HomePage = () => {
                 type="outline"
                 styleButton={{
                   border: `1px solid ${
-                    limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                    dataProduct.length === products?.total
+                      ? "#f5f5f5"
+                      : "#00adb5"
                   }`,
                   color: `${
-                    limit >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                    dataProduct.length === products?.total
+                      ? "#f5f5f5"
+                      : "#00adb5"
                   }`,
                   width: "240px",
                   height: "38px",
                   borderRadius: "4px",
                 }}
-                disabled={limit >= products?.data?.length}
+                disabled={dataProduct.length === products?.total}
                 styleTextButton={{
                   fontWeight: 500,
-                  color: limit >= products?.data?.length && "#fff",
+                  color: dataProduct.length === products?.total && "#fff",
                 }}
                 onClick={() => setPage((prev) => prev + 1)}
               />
@@ -290,19 +288,23 @@ const HomePage = () => {
                 type="outline"
                 styleButton={{
                   border: `1px solid ${
-                    limitNb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                    dataProductNb.length === productNbs?.total
+                      ? "#f5f5f5"
+                      : "#00adb5"
                   }`,
                   color: `${
-                    limitNb >= products?.data?.length ? "#f5f5f5" : "#00adb5"
+                    dataProductNb.length === productNbs?.total
+                      ? "#f5f5f5"
+                      : "#00adb5"
                   }`,
                   width: "240px",
                   height: "38px",
                   borderRadius: "4px",
                 }}
-                disabled={limitNb >= products?.data?.length}
+                disabled={dataProductNb.length === productNbs?.total}
                 styleTextButton={{
                   fontWeight: 500,
-                  color: limitNb >= products?.data?.length && "#fff",
+                  color: dataProductNb.length === productNbs?.total && "#fff",
                 }}
                 onClick={() => setPageNb((prev) => prev + 1)}
               />

@@ -308,7 +308,7 @@ const OrderAdmin = () => {
     return result;
   }, [data]);
   return (
-    <div style={{paddingLeft:'10px'}}>
+    <div style={{ paddingLeft: "10px" }}>
       <WrapperHeader>Quản lý đơn hàng</WrapperHeader>
       <div style={{ height: 200, width: 200 }}>
         <PieChartComponent data={orders?.data} />

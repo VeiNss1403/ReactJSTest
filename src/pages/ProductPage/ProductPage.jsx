@@ -28,9 +28,9 @@ const ProductPage = () => {
     setLoading(true);
     const res = await ProductService.getAllProduct(search, limit, page);
     if (res?.status === "OK") {
-      setLoading(false);
       setProducts(res?.data);
       setPanigate({ ...panigate, total: res?.total });
+      setLoading(false);
     } else {
       setLoading(false);
     }
@@ -38,53 +38,59 @@ const ProductPage = () => {
 
   useEffect(() => {
     fetchProductAll(searchDebounce, panigate.limit, panigate.page);
-  }, [searchDebounce, panigate.limit, panigate.page]);
+  }, [panigate.limit, panigate.page]);
 
   const onChange = (current, pageSize) => {
     setPanigate({ ...panigate, page: current - 1, limit: pageSize });
   };
 
   return (
-    <Loading isLoading={loading}>
-      <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
-        <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
-          <WrapperNavigate onClick={() => navigate("/")}>
-            Trang chủ
-          </WrapperNavigate>
-          <WrapperNavigate>
-            {" > "}
-            Sản phẩm
-          </WrapperNavigate>
-          <Row
+    <div style={{ width: "100%", background: "#efefef", minHeight: "100vh" }}>
+      <div style={{ width: "1300px", margin: "0 auto", height: "100%" }}>
+        <WrapperNavigate onClick={() => navigate("/")}>
+          Trang chủ
+        </WrapperNavigate>
+        <WrapperNavigate>
+          {" > "}
+          Sản phẩm
+        </WrapperNavigate>
+        <Row
+          style={{
+            flexWrap: "nowrap",
+            paddingTop: "10px",
+            height: "calc(100% - 20px)",
+          }}
+        >
+          <WrapperNavbar span={5}>
+            <NavBarComponent />
+          </WrapperNavbar>
+          <Col
+            span={19}
             style={{
-              flexWrap: "nowrap",
-              paddingTop: "10px",
-              height: "calc(100% - 20px)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
-            <WrapperNavbar span={5}>
-              <NavBarComponent />
-            </WrapperNavbar>
-            <Col
-              span={19}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
+            <Loading isLoading={loading}>
               <WrapperProducts>
                 {products
                   ?.filter((pro) => {
+                    const nameMatch =
+                      searchDebounce === "" ||
+                      pro?.name
+                        ?.toLowerCase()
+                        .includes(searchDebounce?.toLowerCase());
                     const brandMatch =
                       brandProduct.length === 0 ||
                       brandProduct.includes(pro?.brand);
-
                     const priceFilter =
                       pro?.price >= test?.product?.pricemin &&
                       pro?.price <= test?.product?.pricemax;
                     const ratingFilter = pro?.rating >= test?.product?.rating;
-                    return brandMatch && priceFilter && ratingFilter;
+                    return (
+                      nameMatch && brandMatch && priceFilter && ratingFilter
+                    );
                   })
                   .map((product) => {
                     return (
@@ -110,11 +116,11 @@ const ProductPage = () => {
                 onChange={onChange}
                 style={{ textAlign: "center", marginTop: "10px" }}
               />
-            </Col>
-          </Row>
-        </div>
+            </Loading>
+          </Col>
+        </Row>
       </div>
-    </Loading>
+    </div>
   );
 };
 export default ProductPage;

@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
 import { WrapperButtonMore } from "../../pages/HomePage/style";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { render } from "@testing-library/react";
 
 const NavBarComponent = () => {
   const dispatch = useDispatch();
@@ -140,23 +141,41 @@ const NavBarComponent = () => {
       <WrapperLableText>Thương hiệu</WrapperLableText>
       <WrapperContent>
         {renderContent("checkbox", brandFirst)}
-        <WrapperButtonMore
-          textbutton={"Xem thêm"}
-          type="outline"
-          styleButton={{
-            border: `1px solid ${"#00adb5"}`,
-            color: `${"#00adb5"}`,
-            width: "auto",
-            height: "38px",
-            borderRadius: "4px",
-            display: `${limit === queryBrand.length ? "none" : ""}`,
-          }}
-          styleTextButton={{
-            fontWeight: 500,
-            color: "#000",
-          }}
-          onClick={() => setlimit(queryBrand.length)}
-        />
+        {limit !== queryBrand.length ? (
+          <WrapperButtonMore
+            textbutton={"Xem thêm"}
+            type="outline"
+            styleButton={{
+              border: `1px solid ${"#00adb5"}`,
+              color: `${"#00adb5"}`,
+              width: "auto",
+              height: "38px",
+              borderRadius: "4px",
+            }}
+            styleTextButton={{
+              fontWeight: 500,
+              color: "#000",
+            }}
+            onClick={() => setlimit(queryBrand.length)}
+          />
+        ) : (
+          <WrapperButtonMore
+            textbutton={"Rút gọn"}
+            type="outline"
+            styleButton={{
+              border: `1px solid ${"#00adb5"}`,
+              color: `${"#00adb5"}`,
+              width: "auto",
+              height: "38px",
+              borderRadius: "4px",
+            }}
+            styleTextButton={{
+              fontWeight: 500,
+              color: "#000",
+            }}
+            onClick={() => setlimit(6)}
+          />
+        )}
       </WrapperContent>
       <WrapperLableText>Sản phẩm theo số sao đánh giá</WrapperLableText>
       <WrapperContent>{renderContent("star", [5, 4, 3, 2, 1])}</WrapperContent>
