@@ -29,7 +29,7 @@ const MyOrderPage = () => {
   const user = useSelector((state) => state.user);
 
   const queryOrder = useQuery(
-    { queryKey: ["orders"], queryFn: fetchMyOrder },
+    { queryKey: ["myOrders"], queryFn: fetchMyOrder },
     {
       enabled: state?.id && state?.token,
     }

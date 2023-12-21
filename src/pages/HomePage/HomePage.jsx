@@ -36,7 +36,6 @@ const HomePage = () => {
   const [pageNb, setPageNb] = useState(0);
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductNb, setDataProductNb] = useState([]);
-  console.log("🚀 ~ file: HomePage.jsx:39 ~ HomePage ~ dataProductNb:", dataProductNb)
   const [typeProducts, setTypeProducts] = useState([]);
   const [typeMiniProducts, setTypeMiniProducts] = useState([]);
   const fetchProductAll = async ({ queryKey: [, page, limit, search] }) => {
@@ -75,7 +74,7 @@ const HomePage = () => {
     data: products,
     isPreviousData,
   } = useQuery(
-    ["products", page, limit, searchDebounce],
+    ["productsHome", page, limit, searchDebounce],
     fetchProductAll,
     queryConfig
   );

@@ -40,7 +40,7 @@ const NavBarComponent = () => {
     return res;
   };
   const queryBrand = useQuery({
-    queryKey: ["products"],
+    queryKey: ["productsBrand"],
     queryFn: fetchAllBrandProduct,
   });
   const brandFirst = queryBrand?.data?.data?.slice(0, limit);

@@ -54,9 +54,9 @@ const AdminPage = () => {
 
   const queries = useQueries({
     queries: [
-      { queryKey: ["products"], queryFn: getAllProducts, staleTime: 1000 * 60 },
-      { queryKey: ["users"], queryFn: getAllUsers, staleTime: 1000 * 60 },
-      { queryKey: ["orders"], queryFn: getAllOrder, staleTime: 1000 * 60 },
+      { queryKey: ["productsAdmin"], queryFn: getAllProducts, staleTime: 1000 * 60 },
+      { queryKey: ["usersAdmin"], queryFn: getAllUsers, staleTime: 1000 * 60 },
+      { queryKey: ["ordersAdmin"], queryFn: getAllOrder, staleTime: 1000 * 60 },
     ],
   });
   const memoCount = useMemo(() => {
