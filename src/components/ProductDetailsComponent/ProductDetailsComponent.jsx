@@ -413,7 +413,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
               style={{
                 backgroundColor: "#00adb5",
                 color: "#fff",
-
+                borderRadius: 5,
                 padding: "15px",
                 fontWeight: "bolder",
               }}
