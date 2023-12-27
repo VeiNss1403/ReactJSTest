@@ -119,8 +119,8 @@ const AdminUser = () => {
   } = mutationDeletedMany;
 
   const queryClient = useQueryClient();
-  const users = queryClient.getQueryData(["users"]);
-  const isFetchingUser = useIsFetching(["users"]);
+  const users = queryClient.getQueryData(["usersAdmin"]);
+  const isFetchingUser = useIsFetching(["usersAdmin"]);
   const renderAction = () => {
     return (
       <div>

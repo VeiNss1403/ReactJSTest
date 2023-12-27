@@ -62,7 +62,7 @@ const ContactPage = () => {
                 hoặc <span style={{ color: "black" }}>liên hệ</span>{" "}
                 <span>
                   <a
-                    class="link"
+                    className="link"
                     href="tel:0981523790"
                     style={{ color: "black", textDecoration: "none" }}
                   >

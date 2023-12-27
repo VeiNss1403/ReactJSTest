@@ -58,7 +58,7 @@ const FooterComponent = () => {
               <WrapperText1>Econutri Hỗ Trợ Tư Vấn 24/7</WrapperText1>
               <WrapperTextFooterSmall>
                 <a
-                  class="link"
+                  className="link"
                   href="tel:0981523790"
                   style={{ color: "black", textDecoration: "none" }}
                 >
