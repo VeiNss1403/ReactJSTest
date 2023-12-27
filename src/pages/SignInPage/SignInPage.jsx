@@ -36,6 +36,10 @@ const SignInPage = () => {
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
   const { data, isLoading, isSuccess } = mutation;
   const { data: dataSignUp, isSuccess: isSuccessSignUp } = mutationSignUp;
+  console.log(
+    "🚀 ~ file: SignInPage.jsx:39 ~ SignInPage ~ dataSignUp:",
+    dataSignUp
+  );
 
   useEffect(() => {
     if (isSuccessSignUp && dataSignUp?.status === "OK") {
@@ -46,8 +50,16 @@ const SignInPage = () => {
         password,
       });
       message.success("Đăng nhập thành công");
+      navigate("/");
     } else if (isSuccessSignUp && dataSignUp?.status === "ERR") {
-      message.error("Đăng nhập thất bại");
+      if (dataSignUp?.message === "The email is already") {
+        mutation.mutate({
+          email,
+          password,
+        });
+      } else {
+        message.error(dataSignUp?.message);
+      }
     }
   }, [isSuccessSignUp]);
 
@@ -179,6 +191,8 @@ const SignInPage = () => {
                   response?.data?.email,
                   response?.data?.email
                 );
+                setEmail(response?.data?.email);
+                setPassword(response?.data?.email);
               }}
             >
               <FacebookLoginButton
