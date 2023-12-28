@@ -401,10 +401,10 @@ const AdminPage = () => {
             </ChartContainer>
           </div>
         );
-      case "/":
-        return navigate("/");
       case "revenue":
         return <AdminRevenue />;
+      case "/":
+        return navigate("/");
       default:
         return;
     }

@@ -45,13 +45,13 @@ const AdminRevenue = () => {
   });
 
   useEffect(() => {
-    handleRevenue(); 
-  }, [queryOrder.data]); 
+    if (queryOrder.data) handleRevenue();
+  }, [queryOrder.data]);
 
   const handleRevenue = (time) => {
     const startDate = time
       ? moment(time[0].$d, "DD-MM-YYYY")
-      : moment("01-01-1970", "DD-MM-YYYY"); 
+      : moment("01-01-1970", "DD-MM-YYYY");
     const endDate = time ? moment(time[1].$d, "DD-MM-YYYY") : moment();
 
     const filteredData = queryOrder?.data?.data?.filter((order) => {
